@@ -27,7 +27,7 @@ function ReminderSection() {
 	);
 }
 
-/* function ToilSection() {
+function ToilSection() {
 	const { reminders, addReminder, removeReminder } = useDeliveryReminders();
 
 	return (
@@ -47,7 +47,7 @@ function ReminderSection() {
 		</div>
 	);
 }
- */
+
 function App() {
 	return (
 		<main className="flex flex-col gap-4 px-10 py-5">
