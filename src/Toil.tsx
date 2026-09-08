@@ -11,7 +11,7 @@ export function useToil() {
 	const [data, setData] = useState<ToilUser[]>([
 		{
 			name: "Kaio",
-			avatar: "/avatar-man.png",
+			avatar: "./avatar-man.png",
 			amount: 0,
 			logs: [
 				"+ 4h20m devido ao extra no feriado",
