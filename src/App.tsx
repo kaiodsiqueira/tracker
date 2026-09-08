@@ -52,7 +52,7 @@ function App() {
 	return (
 		<main className="flex flex-col gap-4 px-10 py-5">
 			<ReminderSection />
-			<ToilSection />
+			{/* <ToilSection /> */}
 		</main>
 	);
 }
