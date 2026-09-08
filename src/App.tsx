@@ -4,6 +4,7 @@ import ListDeliveryReminders, {
 } from "./Reminders";
 
 import { Title } from "./StaticComponents";
+import { ToilList, useToil } from "./Toil";
 
 function ReminderSection() {
 	const { reminders, addReminder, removeReminder } = useDeliveryReminders();
@@ -28,7 +29,7 @@ function ReminderSection() {
 }
 
 function ToilSection() {
-	const { reminders, addReminder, removeReminder } = useDeliveryReminders();
+	const { data } = useToil();
 
 	return (
 		<div className="p-4 border border-black/20 shadow-lg rounded">
@@ -39,11 +40,9 @@ function ToilSection() {
 						Gerenciamento de horas extras, feriados e faltas.
 					</p>
 				</div>
-
-				<CreateDeliveryReminderButton onSave={addReminder} />
 			</div>
 
-			<ListDeliveryReminders reminders={reminders} onRemove={removeReminder} />
+			<ToilList data={data} />
 		</div>
 	);
 }
@@ -52,7 +51,7 @@ function App() {
 	return (
 		<main className="flex flex-col gap-4 px-10 py-5">
 			<ReminderSection />
-			{/* <ToilSection /> */}
+			<ToilSection />
 		</main>
 	);
 }
