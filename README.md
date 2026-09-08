@@ -1,32 +1,8 @@
-# React + TypeScript + Vite
+# Where to find icons
+This project uses icons from the Lucide icon library. Search for icons [here](https://lucide.dev/).
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# How are data saved
+The approach used by this project for persistent storage of informations is based on the browser's local storage. Future plans includes backup options.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+# How hotkeys are managed
+We are using the TanStack Hotkeys library to manage hotkeys. Go to the [documentation](https://tanstack.com/hotkeys) for more information.
