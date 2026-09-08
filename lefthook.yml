@@ -11,6 +11,12 @@ pre-commit:
       run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
 
+pre-push:
+  commands:
+    build:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css}"
+      run: npm run build
+
 # pre-push:
 #   jobs:
 #     - name: packages audit
