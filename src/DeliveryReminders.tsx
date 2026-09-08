@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 
 import Modal from "react-modal";
-import { Title } from "./StaticComponents";
-import { getPersistentStorage } from "./PersistentStorage";
+import { Shortcut, Title } from "./StaticComponents";
+import { getPersistentStorage, getRelativeTime } from "./utility";
+import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
+import { CircleSlash, Trash } from "lucide-react";
 
-type Reminder = { name: string };
+type Reminder = { name: string; createdAt: Date };
 
 export function useDeliveryReminders() {
-
   // Load reminders from persistent storage on component mount or initialize as empty array
   const [reminders, setReminders] = useState<Reminder[]>(
     (getPersistentStorage("reminders") as Reminder[]) || [],
@@ -26,53 +27,85 @@ export function useDeliveryReminders() {
   };
 }
 
-export function CreateDeliveryReminderButton(props: {
+function NewReminderModal({
+  isOpen,
+  setIsOpen,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  onSubmit: (reminder: Reminder) => void;
+}) {
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    setName("");
+  }, [isOpen]);
+
+  function submit() {
+    if (name.trim() === "") return setIsOpen(false);
+    onSubmit({ name, createdAt: new Date() });
+    setIsOpen(false);
+  }
+
+  useHotkey("Enter", submit, { ignoreInputs: false, enabled: isOpen });
+  useHotkey("Escape", () => setIsOpen(false), { enabled: isOpen });
+
+  return (
+    <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+      <Title>Criar novo lembrete</Title>
+
+      <input
+        type="text"
+        autoFocus
+        placeholder="Nomear lembrete"
+        className="mt-2 px-4 py-2 w-full border border-black/20 shadow rounded outline-none"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <button
+        onClick={submit}
+        className="px-4 py-2 bg-emerald-600 text-white rounded shadow mt-3 hover:cursor-pointer hover:bg-emerald-700"
+      >
+        <Shortcut>{formatForDisplay("Enter")}</Shortcut> Salvar
+      </button>
+
+      <button
+        onClick={() => setIsOpen(false)}
+        className="ml-2 px-4 py-2 bg-red-800 text-white rounded shadow mt-3 hover:cursor-pointer"
+      >
+        <Shortcut>{formatForDisplay("Escape")}</Shortcut> Cancelar
+      </button>
+    </Modal>
+  );
+}
+
+export function CreateDeliveryReminderButton({
+  onSave,
+}: {
   onSave: (reminder: Reminder) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [name, setName] = useState("");
+  const toggleCreateReminderModal = () => setIsOpen(!isOpen);
 
-  function save() {
-    props.onSave({ name });
-    setIsOpen(false);
-  }
+  useHotkey("Mod+L", toggleCreateReminderModal);
 
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={toggleCreateReminderModal}
         className="px-4 py-2 bg-emerald-600 text-white rounded shadow mt-3 hover:cursor-pointer hover:bg-emerald-700"
       >
-        Criar lembrete
+        <Shortcut>{formatForDisplay("Mod+L")}</Shortcut> Criar lembrete
       </button>
 
-      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <Title>Criar novo lembrete</Title>
-
-        <label className="text-sx font-medium">Nome</label>
-        <input
-          type="text"
-          placeholder="Nomear lembrete"
-          className="mt-2 px-4 py-2 w-full border shadow rounded outline-none"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <button
-          onClick={() => save()}
-          className="px-4 py-2 bg-emerald-600 text-white rounded shadow mt-3 hover:cursor-pointer hover:bg-emerald-700"
-        >
-          Salvar
-        </button>
-
-        <button
-          onClick={() => setIsOpen(false)}
-          className="ml-2 px-4 py-2 border border-black/20 hover:border-black/40 rounded shadow mt-3 hover:cursor-pointer"
-        >
-          Cancelar
-        </button>
-      </Modal>
+      <NewReminderModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onSubmit={onSave}
+      />
     </>
   );
 }
@@ -85,25 +118,36 @@ export default function ListDeliveryReminders({
   onRemove: (index: number) => void;
 }) {
   return (
-    <div className="mt-2 flex gap-2">
+    <div className="mt-2 flex flex-wrap gap-2">
       {reminders.length > 0 ? (
         reminders.map((reminder, index) => (
           <div
             key={index}
-            className="border-2 font-medium rounded px-4 py-2 border-black/10"
+            className="border shadow flex items-center gap-2 rounded px-4 py-2 border-black/20"
           >
-            {reminder.name}
+            <div>
+              <p className="font-medium">{reminder.name}</p>
+              <p className="text-xs opacity-50">
+                {reminder.createdAt &&
+                  getRelativeTime(
+                    typeof reminder.createdAt === "string"
+                      ? new Date(reminder.createdAt)
+                      : reminder.createdAt,
+                  )}
+              </p>
+            </div>
+
             <button
               onClick={() => onRemove(index)}
-              className="ml-2 px-2 py-1 bg-red-600 text-white rounded shadow hover:cursor-pointer hover:bg-red-700"
+              className="ml-2 px-2 py-1 bg-red-700 text-white rounded shadow hover:cursor-pointer hover:bg-red-800"
             >
-              Remover
+              <Trash size={15} />
             </button>
           </div>
         ))
       ) : (
-        <div className="border-2 border-black/10 border-dashed w-full p-6">
-          Nenhum lembrete
+        <div className="pointer-events-none select-none flex gap-2 text-black/20 border-2 border-black/10 border-dashed w-full p-6">
+          <CircleSlash /> Nenhum lembrete
         </div>
       )}
     </div>

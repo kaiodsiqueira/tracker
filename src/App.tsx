@@ -12,9 +12,9 @@ function App() {
       <div className="p-4 border-2 border-black/10 shadow-md rounded">
         <div className="flex justify-between gap-2">
           <div>
-            <Title>Entregas em progresso...</Title>
+            <Title>Lembretes pendentes</Title>
             <p className="text-xs">
-              Lembretes de entregas que retornarão com dinheiro
+              eg. Dinheiro a receber de entregadores ou pagamentos pendentes para ainda hoje
             </p>
           </div>
 
