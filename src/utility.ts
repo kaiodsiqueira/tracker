@@ -32,7 +32,7 @@ export function getRelativeTime(pastDate: Date): string {
 	return formatDistanceToNow(pastDate, { locale: ptBR, addSuffix: true });
 }
 
-export function minutesToDuration(minutes) {
+export function minutesToDuration(minutes: number) {
 	const duration = intervalToDuration({
 		start: 0,
 		end: minutes * 60 * 1000,
