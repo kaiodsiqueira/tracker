@@ -1,8 +1,10 @@
 import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
-import { CircleSlash, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { Shortcut, Title } from "./StaticComponents";
+import { Input } from "./Common";
+import Button from "./components/Button";
+import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
 import { getPersistentStorage, getRelativeTime } from "./utility";
 
 type Reminder = { name: string; createdAt: Date };
@@ -49,36 +51,31 @@ function NewReminderModal({
 	}
 
 	useHotkey("Enter", submit, { ignoreInputs: false, enabled: isOpen });
-	useHotkey("Escape", () => setIsOpen(false), { enabled: isOpen });
+	// useHotkey("Escape", () => setIsOpen(false), { enabled: isOpen });
 
 	return (
 		<Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
 			<Title>Criar novo lembrete</Title>
 
-			<input
-				type="text"
+			<Input
 				autoFocus
-				placeholder="Nomear lembrete"
-				className="mt-2 px-4 py-2 w-full border border-black/20 shadow rounded outline-none"
+				type="text"
 				value={name}
+				title="Nome"
+				containerClassName="mt-2"
+				placeholder="Nomear lembrete"
 				onChange={(e) => setName(e.target.value)}
 			/>
 
-			<button
-				type="submit"
-				onClick={submit}
-				className="px-4 py-2 bg-emerald-600 text-white rounded shadow mt-3 hover:cursor-pointer hover:bg-emerald-700"
-			>
-				<Shortcut>{formatForDisplay("Enter")}</Shortcut> Salvar
-			</button>
+			<div className="flex gap-2">
+				<Button type="submit" onClick={submit} theme="success">
+					<Shortcut>{formatForDisplay("Enter")}</Shortcut> Salvar
+				</Button>
 
-			<button
-				type="reset"
-				onClick={() => setIsOpen(false)}
-				className="ml-2 px-4 py-2 bg-red-800 text-white rounded shadow mt-3 hover:cursor-pointer"
-			>
-				<Shortcut>{formatForDisplay("Escape")}</Shortcut> Cancelar
-			</button>
+				<Button type="reset" theme="danger" onClick={() => setIsOpen(false)}>
+					<Shortcut>{formatForDisplay("Escape")}</Shortcut> Cancelar
+				</Button>
+			</div>
 		</Modal>
 	);
 }
@@ -150,9 +147,7 @@ export default function ListDeliveryReminders({
 					</div>
 				))
 			) : (
-				<div className="pointer-events-none select-none flex gap-2 text-black/20 border-2 border-black/10 border-dashed w-full p-6">
-					<CircleSlash /> Nenhum lembrete
-				</div>
+				<EmptySection>Nenhum lembrete</EmptySection>
 			)}
 		</div>
 	);

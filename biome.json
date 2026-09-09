@@ -18,14 +18,21 @@
 			"a11y": {
 				"noAutofocus": "off"
 			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			},
 			"preset": "recommended"
 		}
+	},
+	"css": {
+		"parser": { "tailwindDirectives": true }
 	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
 		}
 	},
+
 	"assist": {
 		"enabled": true,
 		"actions": {

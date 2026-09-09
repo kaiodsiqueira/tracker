@@ -1,10 +1,9 @@
+import { Title } from "./components/StaticComponents";
 import ListDeliveryReminders, {
 	CreateDeliveryReminderButton,
 	useDeliveryReminders,
 } from "./Reminders";
-
-import { Title } from "./StaticComponents";
-import { ToilList, useToil } from "./Toil";
+import { NewToilUserButton, ToilList, useToil } from "./Toil";
 
 function ReminderSection() {
 	const { reminders, addReminder, removeReminder } = useDeliveryReminders();
@@ -29,7 +28,7 @@ function ReminderSection() {
 }
 
 function ToilSection() {
-	const { data } = useToil();
+	const { toilUsers, addToilUser, removeToilUser, addAmount } = useToil();
 
 	return (
 		<div className="p-4 border border-black/20 shadow-lg rounded">
@@ -40,9 +39,15 @@ function ToilSection() {
 						Gerenciamento de horas extras, feriados e faltas.
 					</p>
 				</div>
+
+				<NewToilUserButton addToilUser={addToilUser} />
 			</div>
 
-			<ToilList data={data} />
+			<ToilList
+				data={toilUsers}
+				removeToilUser={removeToilUser}
+				addAmount={addAmount}
+			/>
 		</div>
 	);
 }
