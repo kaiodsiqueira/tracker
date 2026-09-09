@@ -271,7 +271,7 @@ export function ToilList({
 	addAmount: (i: number, amount: number) => void;
 }) {
 	return (
-		<div className="flex gap-2 mt-4">
+		<div className="flex flex-wrap gap-2 mt-4">
 			{data.length ? (
 				data.map((u, i) => (
 					<ToilUser
