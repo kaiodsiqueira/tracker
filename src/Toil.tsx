@@ -1,7 +1,24 @@
 import { formatForDisplay } from "@tanstack/react-hotkeys";
-import { EllipsisVertical, Minus, Plus, Trash, User } from "lucide-react";
+import {
+	EllipsisVertical,
+	Minus,
+	Plus,
+	TextCursor,
+	Trash,
+	User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -127,6 +144,8 @@ function ToilUser({
 	removeToilUser: (i: number) => void;
 	addAmount: (i: number, amount: number) => void;
 }) {
+	const [customAmount, setCustomAmount] = useState(0);
+
 	const totalHours = minutesToDuration(Math.abs(amount));
 
 	return (
@@ -233,6 +252,52 @@ function ToilUser({
 						</DropdownMenuGroup>
 
 						<DropdownMenuSeparator />
+
+						<DropdownMenuItem render={<Drawer />}>
+							<DrawerTrigger
+								render={
+									<Button
+										//onClick={() => removeToilUser(i)}
+										className="flex items-center mt-1 w-full"
+										theme="neutral"
+									/>
+								}
+							>
+								<TextCursor />
+								<p className="text-xs">Valor personalizado</p>
+							</DrawerTrigger>
+							<DrawerContent>
+								<DrawerHeader>
+									<DrawerTitle>Digite um valor personalizado</DrawerTitle>
+									<DrawerDescription>
+										Em minutos, use números negativos para subtrair e positivo
+										para somar.
+									</DrawerDescription>
+								</DrawerHeader>
+
+								<div className="flex justify-center p-4">
+									<Input
+										type="text"
+										value={customAmount}
+										className="w-full max-w-100"
+										onChange={(e) =>
+											setCustomAmount(parseInt(e.target.value, 10))
+										}
+									/>
+								</div>
+
+								<DrawerFooter className="flex-row justify-center">
+									<Button theme="success" className="w-fit">
+										Aplicar
+									</Button>
+									<DrawerClose
+										render={<Button className="w-fit" theme="danger" />}
+									>
+										Cancelar
+									</DrawerClose>
+								</DrawerFooter>
+							</DrawerContent>
+						</DropdownMenuItem>
 
 						<DropdownMenuItem
 							render={
