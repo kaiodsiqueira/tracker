@@ -1,12 +1,13 @@
 import { Title } from "./components/StaticComponents";
-import ListDeliveryReminders, {
+import {
 	CreateDeliveryReminderButton,
-	useDeliveryReminders,
+	ListDeliveryReminders,
+	useReminders,
 } from "./Reminders";
 import { NewToilUserButton, ToilList, useToil } from "./Toil";
 
 function ReminderSection() {
-	const { reminders, addReminder, removeReminder } = useDeliveryReminders();
+	const { reminders, addReminder, removeReminder } = useReminders();
 
 	return (
 		<div className="p-4 border border-black/20 shadow-lg rounded">

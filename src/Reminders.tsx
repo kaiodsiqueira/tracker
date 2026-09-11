@@ -1,15 +1,13 @@
 import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
 import { Trash } from "lucide-react";
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
-import Button from "./components/Button";
-import { Input } from "./components/Common";
-import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
+import NewReminderDialog from "@/components/reminders/NewReminderDialog";
+import { EmptySection, Shortcut } from "./components/StaticComponents";
 import { getPersistentStorage, getRelativeTime } from "./utility";
 
 type Reminder = { name: string; createdAt: Date };
 
-export function useDeliveryReminders() {
+export function useReminders() {
 	// Load reminders from persistent storage on component mount or initialize as empty array
 	const [reminders, setReminders] = useState<Reminder[]>(
 		(getPersistentStorage("reminders") as Reminder[]) || [],
@@ -28,89 +26,37 @@ export function useDeliveryReminders() {
 	};
 }
 
-function NewReminderModal({
-	isOpen,
-	setIsOpen,
-	onSubmit,
-}: {
-	isOpen: boolean;
-	setIsOpen: (isOpen: boolean) => void;
-	onSubmit: (reminder: Reminder) => void;
-}) {
-	const [name, setName] = useState("");
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: need it this way
-	useEffect(() => {
-		setName("");
-	}, [isOpen]);
-
-	function submit() {
-		if (name.trim() === "") return setIsOpen(false);
-		onSubmit({ name, createdAt: new Date() });
-		setIsOpen(false);
-	}
-
-	useHotkey("Enter", submit, { ignoreInputs: false, enabled: isOpen });
-	// useHotkey("Escape", () => setIsOpen(false), { enabled: isOpen });
-
-	return (
-		<Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-			<Title>Criar novo lembrete</Title>
-
-			<Input
-				autoFocus
-				type="text"
-				value={name}
-				title="Nome"
-				containerClassName="mt-2"
-				placeholder="Nomear lembrete"
-				onChange={(e) => setName(e.target.value)}
-			/>
-
-			<div className="flex gap-2">
-				<Button type="submit" onClick={submit} theme="success">
-					<Shortcut>{formatForDisplay("Enter")}</Shortcut> Salvar
-				</Button>
-
-				<Button type="reset" theme="danger" onClick={() => setIsOpen(false)}>
-					<Shortcut>{formatForDisplay("Escape")}</Shortcut> Cancelar
-				</Button>
-			</div>
-		</Modal>
-	);
-}
-
 export function CreateDeliveryReminderButton({
 	onSave,
 }: {
 	onSave: (reminder: Reminder) => void;
 }) {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isNewReminderDialogOpen, setIsNewReminderDialogOpen] = useState(false);
 
-	const toggleCreateReminderModal = () => setIsOpen(!isOpen);
-
-	useHotkey("Mod+L", toggleCreateReminderModal);
+	useHotkey("Mod+L", () => setIsNewReminderDialogOpen(true));
 
 	return (
 		<>
 			<button
 				type="button"
-				onClick={toggleCreateReminderModal}
+				onClick={() => setIsNewReminderDialogOpen(true)}
 				className="px-4 py-2 bg-emerald-600 text-white rounded shadow mt-3 hover:cursor-pointer hover:bg-emerald-700"
 			>
 				<Shortcut>{formatForDisplay("Mod+L")}</Shortcut> Criar lembrete
 			</button>
 
-			<NewReminderModal
-				isOpen={isOpen}
-				setIsOpen={setIsOpen}
-				onSubmit={onSave}
+			<NewReminderDialog
+				isOpen={isNewReminderDialogOpen}
+				setIsOpen={setIsNewReminderDialogOpen}
+				onSave={(typedReminderName) =>
+					onSave({ name: typedReminderName, createdAt: new Date() })
+				}
 			/>
 		</>
 	);
 }
 
-export default function ListDeliveryReminders({
+export function ListDeliveryReminders({
 	reminders,
 	onRemove,
 }: {
