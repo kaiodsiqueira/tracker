@@ -57,6 +57,12 @@ function App() {
 		<main className="flex flex-col gap-4 px-10 py-5">
 			<ReminderSection />
 			<ToilSection />
+
+			<footer className="w-full border-t px-20 py-5 flex justify-center text-xs">
+				<p className="opacity-75">
+					Sistema feito por <b>@kaiodsiqueira</b> para <b>@nildo_celular_</b>
+				</p>
+			</footer>
 		</main>
 	);
 }
