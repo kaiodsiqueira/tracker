@@ -59,8 +59,8 @@ function App() {
 			<ReminderSection />
 			<ToilSection />
 
-			<footer className="w-full border-t px-20 py-5 flex justify-center text-xs">
-				<p className="opacity-75">
+			<footer className="w-full border-t px-20 py-5 flex justify-center text-[8px]">
+				<p className="opacity-50">
 					Sistema feito por <b>@kaiodsiqueira</b> para <b>@nildo_celular_</b>
 				</p>
 			</footer>
