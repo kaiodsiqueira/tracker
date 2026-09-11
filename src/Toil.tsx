@@ -10,16 +10,6 @@ import {
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
@@ -28,9 +18,11 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input, Select } from "./Common";
 import Button from "./components/Button";
+import { Input, Select } from "./components/Common";
+import ConfirmDialog from "./components/ConfirmDialog";
 import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
+import CustomValueDialog from "./toil/CustomValueDialog";
 import { getPersistentStorage, minutesToDuration, tw } from "./utility";
 
 type ToilUser = {
@@ -113,7 +105,7 @@ export function NewToilUserButton({
 					<option value="./avatar-woman.png">Mulher</option>
 				</Select>
 
-				<div className="flex gap-2">
+				<div className="mt-4 flex gap-2">
 					<Button type="submit" onClick={onSubmit} theme="success">
 						<Shortcut>{formatForDisplay("Enter")}</Shortcut> Salvar
 					</Button>
@@ -144,7 +136,9 @@ function ToilUser({
 	removeToilUser: (i: number) => void;
 	addAmount: (i: number, amount: number) => void;
 }) {
-	const [customAmount, setCustomAmount] = useState(0);
+	const [isCustomValueDrawerOpen, setIsCustomValueDrawerOpen] = useState(false);
+	const [isDeleteUserConfirmDialogOpen, setIsDeleteUserConfirmDialogOpen] =
+		useState(false);
 
 	const totalHours = minutesToDuration(Math.abs(amount));
 
@@ -184,6 +178,7 @@ function ToilUser({
 						<DropdownMenuGroup className="gap-2">
 							<DropdownMenuLabel>Horas dentro</DropdownMenuLabel>
 							<DropdownMenuItem
+								nativeButton={true}
 								render={
 									<Button
 										onClick={() => addAmount(i, 260)} // 4h20m in minutes
@@ -199,6 +194,7 @@ function ToilUser({
 								</div>
 							</DropdownMenuItem>
 							<DropdownMenuItem
+								nativeButton={true}
 								render={
 									<Button
 										onClick={() => addAmount(i, 260 * 2)} // 8h40m in minutes
@@ -220,6 +216,7 @@ function ToilUser({
 						<DropdownMenuGroup>
 							<DropdownMenuLabel>Horas em débito</DropdownMenuLabel>
 							<DropdownMenuItem
+								nativeButton={true}
 								render={
 									<Button
 										onClick={() => addAmount(i, -260)} // 4h20m in minutes
@@ -235,6 +232,7 @@ function ToilUser({
 								</div>
 							</DropdownMenuItem>
 							<DropdownMenuItem
+								nativeButton={true}
 								render={
 									<Button
 										onClick={() => addAmount(i, -(260 * 2))} // 8h40m in minutes
@@ -253,56 +251,24 @@ function ToilUser({
 
 						<DropdownMenuSeparator />
 
-						<DropdownMenuItem render={<Drawer />}>
-							<DrawerTrigger
-								render={
-									<Button
-										//onClick={() => removeToilUser(i)}
-										className="flex items-center mt-1 w-full"
-										theme="neutral"
-									/>
-								}
-							>
-								<TextCursor />
-								<p className="text-xs">Valor personalizado</p>
-							</DrawerTrigger>
-							<DrawerContent>
-								<DrawerHeader>
-									<DrawerTitle>Digite um valor personalizado</DrawerTitle>
-									<DrawerDescription>
-										Em minutos, use números negativos para subtrair e positivo
-										para somar.
-									</DrawerDescription>
-								</DrawerHeader>
-
-								<div className="flex justify-center p-4">
-									<Input
-										type="text"
-										value={customAmount}
-										className="w-full max-w-100"
-										onChange={(e) =>
-											setCustomAmount(parseInt(e.target.value, 10))
-										}
-									/>
-								</div>
-
-								<DrawerFooter className="flex-row justify-center">
-									<Button theme="success" className="w-fit">
-										Aplicar
-									</Button>
-									<DrawerClose
-										render={<Button className="w-fit" theme="danger" />}
-									>
-										Cancelar
-									</DrawerClose>
-								</DrawerFooter>
-							</DrawerContent>
+						<DropdownMenuItem
+							nativeButton={true}
+							render={
+								<Button
+									onClick={() => setIsCustomValueDrawerOpen(true)}
+									className="w-full"
+									theme="neutral"
+								/>
+							}
+						>
+							<TextCursor /> Personalizado
 						</DropdownMenuItem>
 
 						<DropdownMenuItem
+							nativeButton={true}
 							render={
 								<Button
-									onClick={() => removeToilUser(i)}
+									onClick={() => setIsDeleteUserConfirmDialogOpen(true)}
 									className="mt-1 w-full"
 									theme="danger"
 								/>
@@ -315,13 +281,22 @@ function ToilUser({
 				</DropdownMenu>
 			</div>
 
-			{/* <ul className="mt-2 p-2 rounded bg-black/10">
-        {logs.map((log, _) => (
-          <li className="text-xs opacity-75" key={log}>
-            {log}
-          </li>
-        ))}
-      </ul> */}
+			<CustomValueDialog
+				isOpen={isCustomValueDrawerOpen}
+				setIsOpen={setIsCustomValueDrawerOpen}
+				modifyPersistentAmount={addAmount.bind(null, i)}
+			/>
+
+			<ConfirmDialog
+				confirmationPassword={name}
+				isOpen={isDeleteUserConfirmDialogOpen}
+				setIsOpen={setIsDeleteUserConfirmDialogOpen}
+				afterConfirmation={() => removeToilUser(i)}
+			>
+				<p>
+					Deletar <b>{name}</b> do banco de horas?
+				</p>
+			</ConfirmDialog>
 		</div>
 	);
 }

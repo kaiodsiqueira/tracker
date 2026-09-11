@@ -1,4 +1,4 @@
-import { tw } from "./utility";
+import { tw } from "../utility";
 
 export type InputProps = React.DetailedHTMLProps<
 	React.InputHTMLAttributes<HTMLInputElement>,

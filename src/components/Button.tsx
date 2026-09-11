@@ -7,10 +7,10 @@ type ButtonProps = React.DetailedHTMLProps<
 >;
 
 const buttonStyles = variants({
-	base: "px-4 py-2 rounded shadow mt-3 hover:cursor-pointer",
+	base: "px-4 py-2 rounded shadow hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
 	variants: {
 		theme: {
-			neutral: "border bg-black/20 hover:bg-black/10 shadow-none",
+			neutral: "border bg-black/5 hover:bg-black/10 shadow-none",
 			success: "bg-emerald-600 text-white hover:bg-emerald-700",
 			danger: "bg-red-800 text-white hover:bg-red-900",
 		},

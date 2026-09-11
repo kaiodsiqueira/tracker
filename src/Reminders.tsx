@@ -2,8 +2,8 @@ import { formatForDisplay, useHotkey } from "@tanstack/react-hotkeys";
 import { Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { Input } from "./Common";
 import Button from "./components/Button";
+import { Input } from "./components/Common";
 import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
 import { getPersistentStorage, getRelativeTime } from "./utility";
 
