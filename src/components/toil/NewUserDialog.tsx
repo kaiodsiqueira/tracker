@@ -19,8 +19,6 @@ import {
 	SelectGroup,
 	SelectItem,
 	SelectLabel,
-	SelectTrigger,
-	SelectValue,
 } from "@/components/ui/select";
 
 import type { ToilUser } from "@/Toil";

@@ -1,10 +1,6 @@
 import type { SelectRootProps } from "@base-ui/react";
 
 import {
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue,
 	Select as ShadSelect,
@@ -36,11 +32,6 @@ export function Input({
 		</div>
 	);
 }
-
-type SelectProps = React.DetailedHTMLProps<
-	React.SelectHTMLAttributes<HTMLSelectElement>,
-	HTMLSelectElement
->;
 
 export function Select({
 	title,
