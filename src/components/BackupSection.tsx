@@ -11,13 +11,6 @@ import { Input } from "./Common";
 // Keys used in local storage to be backed up
 const scopes = ["reminders", "toil-users"];
 
-function legcreateAndDownloadBackup() {
-	var data: any = {};
-	for (const scope of scopes) {
-		data[scope] = getPersistentStorage(scope);
-	}
-}
-
 function isDirPickSupported() {
 	return "showDirectoryPicker" in window;
 }
