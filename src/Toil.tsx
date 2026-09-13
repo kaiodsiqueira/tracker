@@ -1,4 +1,3 @@
-import { formatForDisplay } from "@tanstack/react-hotkeys";
 import {
 	EllipsisVertical,
 	Minus,
@@ -18,9 +17,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Button from "./components/Button";
-import { Input, Select } from "./components/Common";
 import ConfirmDialog from "./components/ConfirmDialog";
-import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
+import { EmptySection } from "./components/StaticComponents";
 import CustomValueDialog from "./components/toil/CustomValueDialog";
 import NewUserDialog from "./components/toil/NewUserDialog";
 import { getPersistentStorage, minutesToDuration, tw } from "./utility";
