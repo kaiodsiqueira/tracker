@@ -1,3 +1,4 @@
+import BackupSection from "./components/BackupSection";
 import { Title } from "./components/StaticComponents";
 import {
 	CreateDeliveryReminderButton,
@@ -58,6 +59,7 @@ function App() {
 		<main className="flex flex-col gap-4 px-10 py-5">
 			<ReminderSection />
 			<ToilSection />
+			<BackupSection />
 
 			<footer className="w-full border-t px-20 py-5 flex justify-center text-[8px]">
 				<p className="opacity-50">

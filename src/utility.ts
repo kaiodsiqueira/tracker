@@ -40,3 +40,19 @@ export function minutesToDuration(minutes: number) {
 
 	return formatDuration(duration, { locale: ptBR });
 }
+
+// Returns a string representation of the current date in the format "YYYY-MM-DD-HH-mm-ss"
+export function getNowDateOrderedDashedString() {
+	const now = new Date();
+
+	return `${[
+		now.getFullYear(),
+		now.getMonth() + 1,
+		now.getDate(),
+		now.getHours(),
+		now.getMinutes(),
+		now.getSeconds(),
+	]
+		.map((n) => String(n).padStart(2, "0"))
+		.join("-")}`;
+}

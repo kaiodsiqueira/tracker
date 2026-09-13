@@ -22,14 +22,13 @@ import Button from "./components/Button";
 import { Input, Select } from "./components/Common";
 import ConfirmDialog from "./components/ConfirmDialog";
 import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
-import CustomValueDialog from "./toil/CustomValueDialog";
+import CustomValueDialog from "./components/toil/CustomValueDialog";
 import { getPersistentStorage, minutesToDuration, tw } from "./utility";
 
 type ToilUser = {
 	name: string;
 	avatar: string;
 	amount: number;
-	// logs: string[];
 };
 
 export function useToil() {
@@ -123,48 +122,42 @@ export function NewToilUserButton({
 	);
 }
 
-function ToilUser({
-	name,
-	avatar,
-	amount,
-	// logs,
-	removeToilUser,
-	addAmount,
-	i,
-}: ToilUser & {
-	i: number;
-	removeToilUser: (i: number) => void;
-	addAmount: (i: number, amount: number) => void;
-}) {
+function ToilUser(
+	props: ToilUser & {
+		i: number;
+		removeToilUser: (i: number) => void;
+		addAmount: (i: number, amount: number) => void;
+	},
+) {
 	const [isCustomValueDrawerOpen, setIsCustomValueDrawerOpen] = useState(false);
 	const [isDeleteUserConfirmDialogOpen, setIsDeleteUserConfirmDialogOpen] =
 		useState(false);
 
-	const totalHours = minutesToDuration(Math.abs(amount));
+	const totalHours = minutesToDuration(Math.abs(props.amount));
 
 	return (
-		<div className="border border-black/10 shadow rounded p-2" key={name}>
+		<div className="border border-black/10 shadow rounded p-2" key={props.name}>
 			<div className="flex items-center gap-2">
 				<img
 					className="rounded-full w-fit h-10 object-cover aspect-square"
-					src={avatar}
+					src={props.avatar}
 					alt="the user's avatar"
 				/>
 
 				<div>
-					<p className="font-medium text-lg">{name}</p>
+					<p className="font-medium text-lg">{props.name}</p>
 					<p className="text-sm">
 						<span
 							className={tw(
 								"font-bold",
-								amount < 0
+								props.amount < 0
 									? "text-red-800"
-									: amount > 0
+									: props.amount > 0
 										? "text-green-800"
 										: "",
 							)}
 						>
-							{amount < 0 ? "DEVE" : amount > 0 ? "TEM" : ""}
+							{props.amount < 0 ? "DEVE" : props.amount > 0 ? "TEM" : ""}
 						</span>{" "}
 						<span>{totalHours ? totalHours : "0h 0m"}</span>
 					</p>
@@ -181,7 +174,7 @@ function ToilUser({
 								nativeButton={true}
 								render={
 									<Button
-										onClick={() => addAmount(i, 260)} // 4h20m in minutes
+										onClick={() => props.addAmount(props.i, 260)} // 4h20m in minutes
 										className="mt-1 w-full"
 										theme="success"
 									/>
@@ -197,7 +190,7 @@ function ToilUser({
 								nativeButton={true}
 								render={
 									<Button
-										onClick={() => addAmount(i, 260 * 2)} // 8h40m in minutes
+										onClick={() => props.addAmount(props.i, 260 * 2)} // 8h40m in minutes
 										className="mt-1 w-full"
 										theme="success"
 									/>
@@ -219,7 +212,7 @@ function ToilUser({
 								nativeButton={true}
 								render={
 									<Button
-										onClick={() => addAmount(i, -260)} // 4h20m in minutes
+										onClick={() => props.addAmount(props.i, -260)} // 4h20m in minutes
 										className="mt-1 w-full"
 										theme="danger"
 									/>
@@ -235,7 +228,7 @@ function ToilUser({
 								nativeButton={true}
 								render={
 									<Button
-										onClick={() => addAmount(i, -(260 * 2))} // 8h40m in minutes
+										onClick={() => props.addAmount(props.i, -(260 * 2))} // 8h40m in minutes
 										className="mt-1 w-full"
 										theme="danger"
 									/>
@@ -284,17 +277,17 @@ function ToilUser({
 			<CustomValueDialog
 				isOpen={isCustomValueDrawerOpen}
 				setIsOpen={setIsCustomValueDrawerOpen}
-				modifyPersistentAmount={addAmount.bind(null, i)}
+				modifyPersistentAmount={props.addAmount.bind(null, props.i)}
 			/>
 
 			<ConfirmDialog
-				confirmationPassword={name}
+				confirmationPassword={props.name}
 				isOpen={isDeleteUserConfirmDialogOpen}
 				setIsOpen={setIsDeleteUserConfirmDialogOpen}
-				afterConfirmation={() => removeToilUser(i)}
+				afterConfirmation={() => props.removeToilUser(props.i)}
 			>
 				<p>
-					Deletar <b>{name}</b> do banco de horas?
+					Deletar <b>{props.name}</b> do banco de horas?
 				</p>
 			</ConfirmDialog>
 		</div>
