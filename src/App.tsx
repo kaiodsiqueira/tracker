@@ -16,8 +16,8 @@ function ReminderSection() {
 				<div>
 					<Title>Lembrete de eventos</Title>
 					<p className="text-xs">
-						Gerencie lembretes para não esquecer de receber dinheiro de
-						entregadores.
+						Gerencie lembretes para não esquecer de tarefas importantes mais
+						tarde.
 					</p>
 				</div>
 
@@ -38,7 +38,8 @@ function ToilSection() {
 				<div>
 					<Title>Banco de horas</Title>
 					<p className="text-xs">
-						Gerenciamento de horas extras, feriados e faltas.
+						Gerenciamento de horas extras e débitos de jornada, como feriados e
+						faltas
 					</p>
 				</div>
 
