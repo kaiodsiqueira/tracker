@@ -56,3 +56,5 @@ export function getNowDateOrderedDashedString() {
 		.map((n) => String(n).padStart(2, "0"))
 		.join("-")}`;
 }
+
+export type SS<T> = React.Dispatch<React.SetStateAction<T>>;

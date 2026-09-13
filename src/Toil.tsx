@@ -8,7 +8,6 @@ import {
 	User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -23,9 +22,10 @@ import { Input, Select } from "./components/Common";
 import ConfirmDialog from "./components/ConfirmDialog";
 import { EmptySection, Shortcut, Title } from "./components/StaticComponents";
 import CustomValueDialog from "./components/toil/CustomValueDialog";
+import NewUserDialog from "./components/toil/NewUserDialog";
 import { getPersistentStorage, minutesToDuration, tw } from "./utility";
 
-type ToilUser = {
+export type ToilUser = {
 	name: string;
 	avatar: string;
 	amount: number;
@@ -59,17 +59,7 @@ export function NewToilUserButton({
 }: {
 	addToilUser: (u: ToilUser) => void;
 }) {
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const [name, setName] = useState("");
-	const [avatar, setAvatar] = useState("./avatar-man.png");
-
-	function onSubmit() {
-		if (!name.length) return;
-
-		addToilUser({ name, avatar, amount: 0 });
-		setIsModalOpen(false);
-	}
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	return (
 		<>
@@ -77,47 +67,18 @@ export function NewToilUserButton({
 				type="button"
 				theme="success"
 				title="Adicionar novo usuário"
-				onClick={() => setIsModalOpen(true)}
+				onClick={() => setIsDialogOpen(true)}
 				className="flex items-center"
 			>
 				<Plus className="text-white w-4 h-4" />
 				<User className="text-white w-4 h-4" />
 			</Button>
 
-			<Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-				<Title>Criar novo usuário no banco de horas</Title>
-
-				<Input
-					value={name}
-					onChange={(e) => setName(e.target.value)}
-					title="Nome do usuário"
-					containerClassName="mt-2"
-					placeholder="Cleber Machado"
-				/>
-
-				<Select
-					value={avatar}
-					onChange={(e) => setAvatar(e.target.value)}
-					title="Avatar do usuário"
-				>
-					<option value="./avatar-man.png">Homem</option>
-					<option value="./avatar-woman.png">Mulher</option>
-				</Select>
-
-				<div className="mt-4 flex gap-2">
-					<Button type="submit" onClick={onSubmit} theme="success">
-						<Shortcut>{formatForDisplay("Enter")}</Shortcut> Salvar
-					</Button>
-
-					<Button
-						type="reset"
-						theme="danger"
-						onClick={() => setIsModalOpen(false)}
-					>
-						<Shortcut>{formatForDisplay("Escape")}</Shortcut> Cancelar
-					</Button>
-				</div>
-			</Modal>
+			<NewUserDialog
+				isOpen={isDialogOpen}
+				setIsOpen={setIsDialogOpen}
+				addToilUser={addToilUser}
+			/>
 		</>
 	);
 }
@@ -164,7 +125,7 @@ function ToilUser(
 				</div>
 
 				<DropdownMenu>
-					<DropdownMenuTrigger render={<Button />}>
+					<DropdownMenuTrigger render={<Button className="ml-2" />}>
 						<EllipsisVertical />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="w-fit max-w-50">
@@ -296,8 +257,8 @@ function ToilUser(
 
 export function ToilList({
 	data,
-	removeToilUser,
 	addAmount,
+	removeToilUser,
 }: {
 	data: ToilUser[];
 	removeToilUser: (i: number) => void;
@@ -306,13 +267,13 @@ export function ToilList({
 	return (
 		<div className="flex flex-wrap gap-2 mt-4">
 			{data.length ? (
-				data.map((u, i) => (
+				data.map((user, i) => (
 					<ToilUser
-						key={u.name}
 						i={i}
-						removeToilUser={removeToilUser}
+						key={user.name}
 						addAmount={addAmount}
-						{...u}
+						removeToilUser={removeToilUser}
+						{...user}
 					/>
 				))
 			) : (

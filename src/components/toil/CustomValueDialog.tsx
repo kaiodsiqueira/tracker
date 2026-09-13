@@ -12,6 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import type { SS } from "@/utility";
 
 export default function CustomValueDialog({
 	isOpen,
@@ -19,7 +20,7 @@ export default function CustomValueDialog({
 	modifyPersistentAmount,
 }: {
 	isOpen: boolean;
-	setIsOpen: (x: boolean) => void;
+	setIsOpen: SS<boolean>;
 	modifyPersistentAmount: (a: number) => void;
 }) {
 	const [customAmount, setCustomAmount] = useState("");

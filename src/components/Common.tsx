@@ -1,3 +1,15 @@
+import type { SelectRootProps } from "@base-ui/react";
+
+import {
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+	Select as ShadSelect,
+} from "@/components/ui/select";
+
 import { tw } from "../utility";
 
 export type InputProps = React.DetailedHTMLProps<
@@ -36,19 +48,25 @@ export function Select({
 	className,
 	containerClassName,
 	...props
-}: SelectProps & { containerClassName?: string }) {
+}: SelectRootProps<string, false> & {
+	title?: string;
+	className?: string;
+	containerClassName?: string;
+}) {
 	return (
 		<div className={tw("", containerClassName)}>
 			{title && <span className="font-medium text-xs">{title}</span>}
-			<select
-				className={tw(
-					"px-4 py-2 w-full border border-black/20 shadow rounded outline-none",
-					className,
-				)}
-				{...props}
-			>
+			<ShadSelect {...props}>
+				<SelectTrigger
+					className={tw(
+						"px-4 py-2 w-full border border-black/20 shadow rounded outline-none",
+						className,
+					)}
+				>
+					<SelectValue />
+				</SelectTrigger>
 				{children}
-			</select>
+			</ShadSelect>
 		</div>
 	);
 }
