@@ -11,18 +11,50 @@ import { Input } from "./Common";
 // Keys used in local storage to be backed up
 const scopes = ["reminders", "toil-users"];
 
-function createAndDownloadBackup() {
+function legcreateAndDownloadBackup() {
 	var data: any = {};
 	for (const scope of scopes) {
 		data[scope] = getPersistentStorage(scope);
 	}
+}
+
+function isDirPickSupported() {
+	return "showDirectoryPicker" in window;
+}
+
+async function createAndDownloadBackup() {
+	// Merge scopes data in single object
+	var data: any = {};
+	for (const scope of scopes) {
+		data[scope] = getPersistentStorage(scope);
+	}
+
+	// Download Logic
+	const filename = `backup-${getNowDateOrderedDashedString()}.wtb`;
 	const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-	const url = URL.createObjectURL(blob);
-	const a = document.createElement("a");
-	a.href = url;
-	a.download = `backup-${getNowDateOrderedDashedString()}.wtb`;
-	a.click();
-	URL.revokeObjectURL(url);
+
+	if (isDirPickSupported()) {
+		// biome-ignore lint/suspicious/noTsIgnore: need it like this
+		// @ts-ignore
+		const directory = await window.showDirectoryPicker();
+
+		const file = await directory.getFileHandle(filename, {
+			create: true,
+		});
+
+		const writable = await file.createWritable();
+		await writable.write(blob);
+		await writable.close();
+	} else {
+		// Fallback to download as a file
+		const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = filename;
+		a.click();
+		URL.revokeObjectURL(url);
+	}
 }
 
 export default function BackupSection() {
