@@ -7,15 +7,22 @@ import { Title } from "../StaticComponents";
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
+	const [name, setName] = useState("iPhone 12 256GB");
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	const [name, setName] = useState("iPhone 12 256GB");
 	const [interest, setInterest] = useState("0.12"); // monthly
+	const [fixedInterest, setFixedInterest] = useState("150");
+	const [listPeriod, setListPeriod] = useState("6, 10");
 
 	const nPreco = parseFloat(price);
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
-	// const nInflacao = parseFloat(inflation);
+	const nJurosFixo = parseFloat(fixedInterest);
 	const nJuros = parseFloat(interest);
+
+	const periodos = listPeriod
+		.split(",") // Split in commas
+		.map((p) => parseInt(p.trim(), 10)) // Parse as integer
+		.filter((p) => !Number.isNaN(p)); // Filter out NaN values
 
 	const entrada = nPreco * nPorcentagemDaEntrada;
 	const restante = nPreco - entrada;
@@ -65,9 +72,24 @@ export default function RentSection() {
 				<Input
 					className="w-auto"
 					type="number"
+					title="Juros fixo (em R$)"
+					value={fixedInterest}
+					onChange={(e) => setFixedInterest(e.target.value)}
+				/>
+
+				<Input
+					className="w-auto"
+					type="number"
 					title="Taxa de juros (ao mês)"
 					value={interest}
 					onChange={(e) => setInterest(e.target.value)}
+				/>
+
+				<Input
+					className="w-auto"
+					title="Períodos (6, 8, 10)"
+					value={listPeriod}
+					onChange={(e) => setListPeriod(e.target.value)}
 				/>
 			</div>
 
@@ -78,7 +100,7 @@ export default function RentSection() {
 			</div>
 
 			<ul className="mt-4">
-				{[6, 8, 10].map((meses) => {
+				{periodos.map((meses) => {
 					const jur = juros(restante, nJuros, meses);
 					const restanteComJuros = restante + jur;
 					const parcelas = restanteComJuros / meses;
