@@ -97,9 +97,7 @@ export default function RentSection() {
 										(<b>{BRL(total)}</b>)
 									</div>
 
-									<div>
-										Entrada (<b>{BRL(total - nPreco)}</b>) (<b>{BRL(jur)}</b>)
-									</div>
+									<div></div>
 								</>
 							) : (
 								<div>{BRL(restanteComJuros)}</div>
