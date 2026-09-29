@@ -60,7 +60,9 @@ export default function NewUserDialog({
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Adicionar ao banco de horas</DialogTitle>
-					<DialogDescription>Personalize lorem ipsum.</DialogDescription>
+					<DialogDescription>
+						Criando novo usuário para gerenciar.
+					</DialogDescription>
 				</DialogHeader>
 
 				<Input

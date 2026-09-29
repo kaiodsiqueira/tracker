@@ -20,7 +20,7 @@ export function Input({
 	...props
 }: InputProps & { containerClassName?: string }) {
 	return (
-		<div className={tw("", containerClassName)}>
+		<div className={tw("flex flex-col", containerClassName)}>
 			{title && <span className="font-medium text-xs">{title}</span>}
 			<input
 				className={tw(

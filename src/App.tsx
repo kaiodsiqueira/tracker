@@ -1,4 +1,5 @@
 import BackupSection from "./components/BackupSection";
+import RentSection from "./components/rent/RentSection";
 import { Title } from "./components/StaticComponents";
 import {
 	CreateDeliveryReminderButton,
@@ -58,6 +59,7 @@ function ToilSection() {
 function App() {
 	return (
 		<main className="flex flex-col gap-4 px-10 py-5">
+			<RentSection />
 			<ReminderSection />
 			<ToilSection />
 			<BackupSection />
