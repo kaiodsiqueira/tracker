@@ -58,7 +58,7 @@ function ToilSection() {
 
 function App() {
 	return (
-		<main className="flex flex-col gap-4 px-10 py-5">
+		<main className="flex flex-col gap-4 px-1 sm:px-10 py-5">
 			<RentSection />
 			<ReminderSection />
 			<ToilSection />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { BRL } from "@/utility";
+import { BRL, clamp } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
@@ -9,7 +9,7 @@ export default function RentSection() {
 
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	// const [inflation, setInflation] = useState("0.42"); // yearly
+	const [name, setName] = useState("iPhone 12 256GB");
 	const [interest, setInterest] = useState("0.12"); // monthly
 
 	const nPreco = parseFloat(price);
@@ -39,6 +39,13 @@ export default function RentSection() {
 			<div className="mt-4 flex flex-wrap md:grid grid-cols-3 gap-2">
 				<Input
 					className="w-auto"
+					title="Nome aparelho"
+					value={name}
+					onChange={(e) => setName(e.target.value)}
+				/>
+
+				<Input
+					className="w-auto"
 					type="number"
 					title="Valor do aparelho (à vista)"
 					value={price}
@@ -50,16 +57,10 @@ export default function RentSection() {
 					type="number"
 					title="Porcentagem da entrada"
 					value={downPay}
-					onChange={(e) => setDownPay(e.target.value)}
+					onChange={(e) =>
+						setDownPay(clamp(Number(e.target.value), 0, 100).toString())
+					}
 				/>
-
-				{/* <Input
-					className="w-auto"
-					type="number"
-					title="Inflação (ao ano)"
-					value={inflation}
-					onChange={(e) => setInflation(e.target.value)}
-				/> */}
 
 				<Input
 					className="w-auto"
@@ -71,9 +72,9 @@ export default function RentSection() {
 			</div>
 
 			<div className="mt-4">
-				<span>
-					Entrada: <b>{BRL(entrada)}</b>
-				</span>
+				Simulando: <b>{name}</b>
+				<br />
+				Entrada: <b>{BRL(entrada)}</b>
 			</div>
 
 			<ul className="mt-4">
@@ -84,16 +85,22 @@ export default function RentSection() {
 					const total = entrada + restanteComJuros;
 
 					return (
-						<li key={meses} className="flex flex-col border-b-2 mt-2">
+						<li key={meses} className="pb-3 flex flex-col border-b-2 mt-2">
 							<div>
 								<i>{meses}x</i> de <b>{BRL(parcelas)}</b>
 							</div>
 							{showDetails ? (
-								<div>
-									Entrada (<b>{BRL(entrada)}</b>) + Restante (
-									<b>{BRL(restante)}</b>) + Juros (<b>{BRL(jur)}</b>) = Total (
-									<b>{BRL(total)}</b>)
-								</div>
+								<>
+									<div>
+										Entrada (<b>{BRL(entrada)}</b>) + Restante (
+										<b>{BRL(restante)}</b>) + Juros (<b>{BRL(jur)}</b>) = Total
+										(<b>{BRL(total)}</b>)
+									</div>
+
+									<div>
+										Entrada (<b>{BRL(total - nPreco)}</b>) (<b>{BRL(jur)}</b>)
+									</div>
+								</>
 							) : (
 								<div>{BRL(restanteComJuros)}</div>
 							)}
