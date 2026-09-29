@@ -10,14 +10,14 @@ export default function RentSection() {
 	const [name, setName] = useState("iPhone 12 256GB");
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	const [interest, setInterest] = useState("0.12"); // monthly
+	const [interest, setInterest] = useState("0.104"); // monthly
 	const [fixedInterest, setFixedInterest] = useState("150");
 	const [listPeriod, setListPeriod] = useState("6, 10");
 
 	const nPreco = parseFloat(price);
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
 	const nJurosFixo = parseFloat(fixedInterest);
-	const nJuros = parseFloat(interest);
+	const nTaxaDeJuros = parseFloat(interest);
 
 	const periodos = listPeriod
 		.split(",") // Split in commas
@@ -101,8 +101,8 @@ export default function RentSection() {
 
 			<ul className="mt-4">
 				{periodos.map((meses) => {
-					const jur = juros(restante, nJuros, meses);
-					const restanteComJuros = restante + jur;
+					const juros = nJurosFixo + simples(restante, nTaxaDeJuros, meses);
+					const restanteComJuros = restante + juros;
 					const parcelas = restanteComJuros / meses;
 					const total = entrada + restanteComJuros;
 
@@ -115,8 +115,8 @@ export default function RentSection() {
 								<>
 									<div>
 										Entrada (<b>{BRL(entrada)}</b>) + Restante (
-										<b>{BRL(restante)}</b>) + Juros (<b>{BRL(jur)}</b>) = Total
-										(<b>{BRL(total)}</b>)
+										<b>{BRL(restante)}</b>) + Juros (<b>{BRL(juros)}</b>) =
+										Total (<b>{BRL(total)}</b>)
 									</div>
 
 									<div></div>
@@ -132,6 +132,6 @@ export default function RentSection() {
 	);
 }
 
-function juros(c: number, i: number, t: number) {
+function simples(c: number, i: number, t: number) {
 	return c * i * t;
 }
