@@ -78,7 +78,7 @@ export default function RentSection() {
 			</div>
 
 			<ul className="mt-4">
-				{[6, 8 10].map((meses) => {
+				{[6, 8, 10].map((meses) => {
 					const jur = juros(restante, nJuros, meses);
 					const restanteComJuros = restante + jur;
 					const parcelas = restanteComJuros / meses;
