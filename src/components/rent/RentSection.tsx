@@ -9,12 +9,12 @@ export default function RentSection() {
 
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	const [inflation, setInflation] = useState("0.42"); // yearly
+	// const [inflation, setInflation] = useState("0.42"); // yearly
 	const [interest, setInterest] = useState("0.12"); // monthly
 
 	const nPreco = parseFloat(price);
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
-	const nInflacao = parseFloat(inflation);
+	// const nInflacao = parseFloat(inflation);
 	const nJuros = parseFloat(interest);
 
 	const entrada = nPreco * nPorcentagemDaEntrada;
@@ -53,13 +53,13 @@ export default function RentSection() {
 					onChange={(e) => setDownPay(e.target.value)}
 				/>
 
-				<Input
+				{/* <Input
 					className="w-auto"
 					type="number"
 					title="Inflação (ao ano)"
 					value={inflation}
 					onChange={(e) => setInflation(e.target.value)}
-				/>
+				/> */}
 
 				<Input
 					className="w-auto"
