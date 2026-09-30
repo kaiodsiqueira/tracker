@@ -10,9 +10,9 @@ export default function RentSection() {
 	const [name, setName] = useState("iPhone 12 256GB");
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	const [interest, setInterest] = useState("0.104"); // monthly
-	const [fixedInterest, setFixedInterest] = useState("150");
-	const [listPeriod, setListPeriod] = useState("6, 10");
+	const [interest, setInterest] = useState("0,058"); // monthly
+	const [fixedInterest, setFixedInterest] = useState("600");
+	const [listPeriod, setListPeriod] = useState("5, 6, 8, 10");
 
 	const nPreco = parseFloat(price);
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
