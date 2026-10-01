@@ -96,6 +96,8 @@ export default function RentSection() {
 			<div className="mt-4">
 				Simulando: <b>{name}</b>
 				<br />
+				Valor à vista: <b>{BRL(nPreco)}</b>
+				<br />
 				Entrada: <b>{BRL(entrada)}</b>
 			</div>
 
