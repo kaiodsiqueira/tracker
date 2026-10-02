@@ -7,7 +7,7 @@ import { Title } from "../StaticComponents";
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
-	const [name, setName] = useState("iPhone 12 256GB");
+	const [name, setName] = useState("");
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
 	const [interest, setInterest] = useState("0.081"); // monthly
@@ -94,8 +94,12 @@ export default function RentSection() {
 			</div>
 
 			<div className="mt-4">
-				Simulando: <b>{name}</b>
-				<br />
+				{name && (
+					<>
+						Simulando: <b>{name}</b>
+						<br />
+					</>
+				)}
 				Valor à vista: <b>{BRL(nPreco)}</b>
 				<br />
 				Entrada: <b>{BRL(entrada)}</b>
