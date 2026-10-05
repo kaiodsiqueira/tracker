@@ -8,6 +8,10 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+export function sign(value: number): string {
+	return value < 0 ? "-" : value === 0 ? "" : "+";
+}
+
 export function getPersistentStorage(name: string) {
 	try {
 		const stringyfiedData = localStorage.getItem(name);

@@ -27,6 +27,7 @@ export type ToilUser = {
 	name: string;
 	avatar: string;
 	amount: number;
+	logs: string[];
 };
 
 export function useToil() {
@@ -38,17 +39,26 @@ export function useToil() {
 		localStorage.setItem("toil-users", JSON.stringify(toilUsers));
 	}, [toilUsers]);
 
+	function addAmount(index: number, amount: number, reason: string) {
+		setToilUsers(
+			toilUsers.map((u, i) =>
+				i === index
+					? {
+							...u,
+							amount: u.amount + amount,
+							logs: [reason, ...(u.logs ?? []).slice(0, 4)],
+						}
+					: u,
+			),
+		);
+	}
+
 	return {
 		toilUsers,
 		addToilUser: (u: ToilUser) => setToilUsers([...toilUsers, u]),
 		removeToilUser: (index: number) =>
 			setToilUsers(toilUsers.filter((_, i) => i !== index)),
-		addAmount: (index: number, amount: number) =>
-			setToilUsers(
-				toilUsers.map((u, i) =>
-					i === index ? { ...u, amount: u.amount + amount } : u,
-				),
-			),
+		addAmount,
 	};
 }
 
@@ -85,7 +95,7 @@ function ToilUser(
 	props: ToilUser & {
 		i: number;
 		removeToilUser: (i: number) => void;
-		addAmount: (i: number, amount: number) => void;
+		addAmount: (i: number, amount: number, reason: string) => void;
 	},
 ) {
 	const [isCustomValueDrawerOpen, setIsCustomValueDrawerOpen] = useState(false);
@@ -96,141 +106,158 @@ function ToilUser(
 
 	return (
 		<div className="border border-black/10 shadow rounded p-2" key={props.name}>
-			<div className="flex items-center gap-2">
-				<img
-					className="rounded-full w-fit h-10 object-cover aspect-square"
-					src={props.avatar}
-					alt="the user's avatar"
-				/>
+			<div>
+				<div className="flex justify-between items-center gap-2">
+					<img
+						className="rounded-full w-fit h-10 object-cover aspect-square"
+						src={props.avatar}
+						alt="the user's avatar"
+					/>
 
-				<div>
-					<p className="font-medium text-lg">{props.name}</p>
-					<p className="text-sm">
-						<span
-							className={tw(
-								"font-bold",
-								props.amount < 0
-									? "text-red-800"
-									: props.amount > 0
-										? "text-green-800"
-										: "",
-							)}
-						>
-							{props.amount < 0 ? "DEVE" : props.amount > 0 ? "TEM" : ""}
-						</span>{" "}
-						<span>{totalHours ? totalHours : "0h 0m"}</span>
-					</p>
+					<div>
+						<p className="font-medium text-lg">{props.name}</p>
+						<p className="text-sm">
+							<span
+								className={tw(
+									"font-bold",
+									props.amount < 0
+										? "text-red-800"
+										: props.amount > 0
+											? "text-green-800"
+											: "",
+								)}
+							>
+								{props.amount < 0 ? "DEVE" : props.amount > 0 ? "TEM" : ""}
+							</span>{" "}
+							<span>{totalHours ? totalHours : "0h 0m"}</span>
+						</p>
+					</div>
+
+					<DropdownMenu>
+						<DropdownMenuTrigger render={<Button className="ml-auto" />}>
+							<EllipsisVertical />
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="w-fit max-w-50">
+							{/* <DropdownMenuGroup className="gap-2">
+                <DropdownMenuLabel>Horas dentro</DropdownMenuLabel>
+                <DropdownMenuItem
+                  nativeButton={true}
+                  render={
+                    <Button
+                      onClick={() => props.addAmount(props.i, 260)} // 4h20m in minutes
+                      className="mt-1 w-full"
+                      theme="success"
+                    />
+                  }
+                >
+                  <Plus />
+                  <div className="flex flex-col items-start">
+                    <p className="text-xs">Adicionar Meio Período</p>
+                    <p className="text-xs opacity-50">+ 4h 20m</p>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  nativeButton={true}
+                  render={
+                    <Button
+                      onClick={() => props.addAmount(props.i, 260 * 2)} // 8h40m in minutes
+                      className="mt-1 w-full"
+                      theme="success"
+                    />
+                  }
+                >
+                  <Plus />
+                  <div className="flex flex-col items-start">
+                    <p className="text-xs">Adicionar Full Período</p>
+                    <p className="text-xs opacity-50">+ 8h 40m</p>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Horas em débito</DropdownMenuLabel>
+                <DropdownMenuItem
+                  nativeButton={true}
+                  render={
+                    <Button
+                      onClick={() => props.addAmount(props.i, -260)} // 4h20m in minutes
+                      className="mt-1 w-full"
+                      theme="danger"
+                    />
+                  }
+                >
+                  <Minus />
+                  <div className="flex flex-col items-start">
+                    <p className="text-xs">Remover Meio Período</p>
+                    <p className="text-xs opacity-50">- 4h 20m</p>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  nativeButton={true}
+                  render={
+                    <Button
+                      onClick={() => props.addAmount(props.i, -(260 * 2))} // 8h40m in minutes
+                      className="mt-1 w-full"
+                      theme="danger"
+                    />
+                  }
+                >
+                  <Minus />
+                  <div className="flex flex-col items-start">
+                    <p className="text-xs">Remover Full Período</p>
+                    <p className="text-xs opacity-50">- 8h 40m</p>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+   */}
+							<DropdownMenuItem
+								nativeButton={true}
+								render={
+									<Button
+										onClick={() => setIsCustomValueDrawerOpen(true)}
+										className="w-full"
+										theme="neutral"
+									/>
+								}
+							>
+								<TextCursor /> Personalizado
+							</DropdownMenuItem>
+
+							<DropdownMenuItem
+								nativeButton={true}
+								render={
+									<Button
+										onClick={() => setIsDeleteUserConfirmDialogOpen(true)}
+										className="mt-1 w-full"
+										theme="danger"
+									/>
+								}
+							>
+								<Trash />
+								<p className="text-xs">Deletar usuário</p>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</div>
 
-				<DropdownMenu>
-					<DropdownMenuTrigger render={<Button className="ml-2" />}>
-						<EllipsisVertical />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent className="w-fit max-w-50">
-						<DropdownMenuGroup className="gap-2">
-							<DropdownMenuLabel>Horas dentro</DropdownMenuLabel>
-							<DropdownMenuItem
-								nativeButton={true}
-								render={
-									<Button
-										onClick={() => props.addAmount(props.i, 260)} // 4h20m in minutes
-										className="mt-1 w-full"
-										theme="success"
-									/>
-								}
-							>
-								<Plus />
-								<div className="flex flex-col items-start">
-									<p className="text-xs">Adicionar Meio Período</p>
-									<p className="text-xs opacity-50">+ 4h 20m</p>
-								</div>
-							</DropdownMenuItem>
-							<DropdownMenuItem
-								nativeButton={true}
-								render={
-									<Button
-										onClick={() => props.addAmount(props.i, 260 * 2)} // 8h40m in minutes
-										className="mt-1 w-full"
-										theme="success"
-									/>
-								}
-							>
-								<Plus />
-								<div className="flex flex-col items-start">
-									<p className="text-xs">Adicionar Full Período</p>
-									<p className="text-xs opacity-50">+ 8h 40m</p>
-								</div>
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-
-						<DropdownMenuSeparator />
-
-						<DropdownMenuGroup>
-							<DropdownMenuLabel>Horas em débito</DropdownMenuLabel>
-							<DropdownMenuItem
-								nativeButton={true}
-								render={
-									<Button
-										onClick={() => props.addAmount(props.i, -260)} // 4h20m in minutes
-										className="mt-1 w-full"
-										theme="danger"
-									/>
-								}
-							>
-								<Minus />
-								<div className="flex flex-col items-start">
-									<p className="text-xs">Remover Meio Período</p>
-									<p className="text-xs opacity-50">- 4h 20m</p>
-								</div>
-							</DropdownMenuItem>
-							<DropdownMenuItem
-								nativeButton={true}
-								render={
-									<Button
-										onClick={() => props.addAmount(props.i, -(260 * 2))} // 8h40m in minutes
-										className="mt-1 w-full"
-										theme="danger"
-									/>
-								}
-							>
-								<Minus />
-								<div className="flex flex-col items-start">
-									<p className="text-xs">Remover Full Período</p>
-									<p className="text-xs opacity-50">- 8h 40m</p>
-								</div>
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-
-						<DropdownMenuSeparator />
-
-						<DropdownMenuItem
-							nativeButton={true}
-							render={
-								<Button
-									onClick={() => setIsCustomValueDrawerOpen(true)}
-									className="w-full"
-									theme="neutral"
-								/>
-							}
-						>
-							<TextCursor /> Personalizado
-						</DropdownMenuItem>
-
-						<DropdownMenuItem
-							nativeButton={true}
-							render={
-								<Button
-									onClick={() => setIsDeleteUserConfirmDialogOpen(true)}
-									className="mt-1 w-full"
-									theme="danger"
-								/>
-							}
-						>
-							<Trash />
-							<p className="text-xs">Deletar usuário</p>
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<ul className="flex flex-col px-2 py-1 bg-black/5 rounded mt-2 text-xs">
+					{props.logs
+						? props.logs.map((l) => (
+								<li
+									key={l}
+									className={
+										l.startsWith("+") ? "text-green-500" : "text-red-500"
+									}
+								>
+									{l}
+								</li>
+							))
+						: null}
+				</ul>
 			</div>
 
 			<CustomValueDialog
@@ -260,10 +287,10 @@ export function ToilList({
 }: {
 	data: ToilUser[];
 	removeToilUser: (i: number) => void;
-	addAmount: (i: number, amount: number) => void;
+	addAmount: (i: number, amount: number, reason: string) => void;
 }) {
 	return (
-		<div className="flex flex-wrap gap-2 mt-4">
+		<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-2 mt-4">
 			{data.length ? (
 				data.map((user, i) => (
 					<ToilUser

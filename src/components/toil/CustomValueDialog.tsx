@@ -12,7 +12,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import type { SS } from "@/utility";
+import { minutesToDuration, type SS, sign } from "@/utility";
+
+export const FULL_PERIOD = 520; // 8h 40m
 
 export default function CustomValueDialog({
 	isOpen,
@@ -21,13 +23,24 @@ export default function CustomValueDialog({
 }: {
 	isOpen: boolean;
 	setIsOpen: SS<boolean>;
-	modifyPersistentAmount: (a: number) => void;
+	modifyPersistentAmount: (a: number, reason: string) => void;
 }) {
 	const [customAmount, setCustomAmount] = useState("");
+	const [reason, setReason] = useState("");
 
 	const submit = () => {
-		modifyPersistentAmount(parseInt(customAmount, 10) || 0);
+		const amount = parseInt(customAmount, 10) || 0;
+
+		if (amount === 0) return;
+		if (reason.trim().length === 0) return;
+
+		modifyPersistentAmount(
+			amount,
+			`${sign(amount)} ${minutesToDuration(Math.abs(amount))}: ${reason}`,
+		);
+
 		setCustomAmount("");
+		setReason("");
 		setIsOpen(false);
 	};
 
@@ -46,9 +59,49 @@ export default function CustomValueDialog({
 
 				<Input
 					type="text"
+					title="Valor (ex. -25, 20) [em minutos]"
 					value={customAmount}
 					className="w-full"
 					onChange={(e) => setCustomAmount(e.target.value)}
+				/>
+
+				<div className="flex gap-1">
+					<button
+						type="button"
+						onClick={() => setCustomAmount((-FULL_PERIOD).toString())}
+						className="hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
+					>
+						-8h 40m
+					</button>
+					<button
+						type="button"
+						onClick={() => setCustomAmount((-FULL_PERIOD / 2).toString())}
+						className="hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
+					>
+						-4h 20m
+					</button>
+					<button
+						type="button"
+						onClick={() => setCustomAmount((FULL_PERIOD / 2).toString())}
+						className="hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
+					>
+						+4h 20m
+					</button>
+					<button
+						type="button"
+						onClick={() => setCustomAmount(FULL_PERIOD.toString())}
+						className="hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
+					>
+						+8h 40m
+					</button>
+				</div>
+
+				<Input
+					title="Motivo (ex. Esteve presente durante o feriado)"
+					type="text"
+					value={reason}
+					className="w-full"
+					onChange={(e) => setReason(e.target.value)}
 				/>
 
 				<DialogFooter className="flex-row justify-center">
