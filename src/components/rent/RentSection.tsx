@@ -10,14 +10,16 @@ export default function RentSection() {
 	const [name, setName] = useState("");
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	const [interest, setInterest] = useState("0.081"); // monthly
-	const [fixedInterest, setFixedInterest] = useState("300");
-	const [listPeriod, setListPeriod] = useState("5, 6, 7, 8, 9, 10");
+	const [listInterest, setListInterest] = useState("0.1666666, 0.12"); // monthly
+	const [listPeriod, setListPeriod] = useState("6, 10");
 
-	const nPreco = parseFloat(price);
+	const nPreco = parseFloat(price) || 0;
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
-	const nJurosFixo = parseFloat(fixedInterest);
-	const nTaxaDeJuros = parseFloat(interest);
+
+	const taxas = listInterest
+		.split(",") // Split in commas
+		.map((p) => parseFloat(p.trim())) // Parse as integer
+		.filter((p) => !Number.isNaN(p)); // Filter out NaN values
 
 	const periodos = listPeriod
 		.split(",") // Split in commas
@@ -71,18 +73,9 @@ export default function RentSection() {
 
 				<Input
 					className="w-auto"
-					type="number"
-					title="Juros fixo (em R$)"
-					value={fixedInterest}
-					onChange={(e) => setFixedInterest(e.target.value)}
-				/>
-
-				<Input
-					className="w-auto"
-					type="number"
-					title="Taxa de juros (ao mês)"
-					value={interest}
-					onChange={(e) => setInterest(e.target.value)}
+					title="Lista de taxa de juros (ao mês) [eg. 0.10, 0.12]"
+					value={listInterest}
+					onChange={(e) => setListInterest(e.target.value)}
 				/>
 
 				<Input
@@ -106,8 +99,9 @@ export default function RentSection() {
 			</div>
 
 			<ul className="mt-4">
-				{periodos.map((meses) => {
-					const juros = nJurosFixo + simples(restante, nTaxaDeJuros, meses);
+				{periodos.map((meses, i) => {
+					console.log(meses, i, taxas, taxas[i]);
+					const juros = simples(restante, taxas[i] || 0.12, meses);
 					const restanteComJuros = restante + juros;
 					const parcelas = restanteComJuros / meses;
 					const total = entrada + restanteComJuros;

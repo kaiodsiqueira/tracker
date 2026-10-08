@@ -1,19 +1,10 @@
-import {
-	EllipsisVertical,
-	Minus,
-	Plus,
-	TextCursor,
-	Trash,
-	User,
-} from "lucide-react";
+import { EllipsisVertical, Plus, TextCursor, Trash, User } from "lucide-react";
 import { useEffect, useState } from "react";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Button from "./components/Button";
@@ -109,9 +100,9 @@ function ToilUser(
 			<div>
 				<div className="flex justify-between items-center gap-2">
 					<img
-						className="rounded-full w-fit h-10 object-cover aspect-square"
 						src={props.avatar}
 						alt="the user's avatar"
+						className="rounded-full w-fit h-10 object-cover aspect-square"
 					/>
 
 					<div>
@@ -138,82 +129,6 @@ function ToilUser(
 							<EllipsisVertical />
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-fit max-w-50">
-							{/* <DropdownMenuGroup className="gap-2">
-                <DropdownMenuLabel>Horas dentro</DropdownMenuLabel>
-                <DropdownMenuItem
-                  nativeButton={true}
-                  render={
-                    <Button
-                      onClick={() => props.addAmount(props.i, 260)} // 4h20m in minutes
-                      className="mt-1 w-full"
-                      theme="success"
-                    />
-                  }
-                >
-                  <Plus />
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs">Adicionar Meio Período</p>
-                    <p className="text-xs opacity-50">+ 4h 20m</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  nativeButton={true}
-                  render={
-                    <Button
-                      onClick={() => props.addAmount(props.i, 260 * 2)} // 8h40m in minutes
-                      className="mt-1 w-full"
-                      theme="success"
-                    />
-                  }
-                >
-                  <Plus />
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs">Adicionar Full Período</p>
-                    <p className="text-xs opacity-50">+ 8h 40m</p>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Horas em débito</DropdownMenuLabel>
-                <DropdownMenuItem
-                  nativeButton={true}
-                  render={
-                    <Button
-                      onClick={() => props.addAmount(props.i, -260)} // 4h20m in minutes
-                      className="mt-1 w-full"
-                      theme="danger"
-                    />
-                  }
-                >
-                  <Minus />
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs">Remover Meio Período</p>
-                    <p className="text-xs opacity-50">- 4h 20m</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  nativeButton={true}
-                  render={
-                    <Button
-                      onClick={() => props.addAmount(props.i, -(260 * 2))} // 8h40m in minutes
-                      className="mt-1 w-full"
-                      theme="danger"
-                    />
-                  }
-                >
-                  <Minus />
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs">Remover Full Período</p>
-                    <p className="text-xs opacity-50">- 8h 40m</p>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-   */}
 							<DropdownMenuItem
 								nativeButton={true}
 								render={
@@ -250,7 +165,7 @@ function ToilUser(
 								<li
 									key={l}
 									className={
-										l.startsWith("+") ? "text-green-500" : "text-red-500"
+										l.startsWith("+") ? "text-green-800" : "text-red-800"
 									}
 								>
 									{l}
