@@ -46,7 +46,7 @@ export default function NewUserDialog({
 	const submit = () => {
 		if (!name.length) return;
 
-		addToilUser({ name, avatar, amount: 0 });
+		addToilUser({ name, avatar, amount: 0, logs: [] });
 
 		setName("");
 		setAvatar(DEFAULT_AVATAR);
