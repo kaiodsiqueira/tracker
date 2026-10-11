@@ -167,6 +167,8 @@ export default function User(props: {
 						...infos,
 					}))
 				}
+				labelTitle={`Editando ${props.user.name}`}
+				labelDescription="Você está editando um usuário existente."
 			/>
 		</div>
 	);

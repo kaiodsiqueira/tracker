@@ -48,6 +48,9 @@ export default function EditUserInfoDialog(props: {
 
 	defaultName?: string;
 	defaultAvatar?: string;
+
+	labelTitle: string;
+	labelDescription: string;
 }) {
 	const [name, setName] = useState(props.defaultName || "");
 	const [avatar, setAvatar] = useState(props.defaultAvatar || DEFAULT_AVATAR);
@@ -69,10 +72,8 @@ export default function EditUserInfoDialog(props: {
 		<Dialog open={props.isOpen} onOpenChange={(o) => props.setIsOpen(o)}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Adicionar ao banco de horas</DialogTitle>
-					<DialogDescription>
-						Criando novo usuário para gerenciar.
-					</DialogDescription>
+					<DialogTitle>{props.labelTitle}</DialogTitle>
+					<DialogDescription>{props.labelDescription}</DialogDescription>
 				</DialogHeader>
 
 				<Input

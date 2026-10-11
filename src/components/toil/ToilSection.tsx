@@ -2,7 +2,7 @@ import { Plus, User } from "lucide-react";
 import { useState } from "react";
 import Button from "../Button";
 import { Title } from "../StaticComponents";
-import NewUserDialog from "./EditUserInfoDialog";
+import EditUserInfoDialog from "./EditUserInfoDialog";
 import ToilList from "./ToilList";
 import { type ToilUser, useToil } from "./useToil";
 
@@ -26,7 +26,7 @@ function NewToilUserButton({
 				<User className="text-white w-4 h-4" />
 			</Button>
 
-			<NewUserDialog
+			<EditUserInfoDialog
 				isOpen={isDialogOpen}
 				setIsOpen={setIsDialogOpen}
 				onSave={(infos) =>
@@ -36,6 +36,8 @@ function NewToilUserButton({
 						logs: [],
 					})
 				}
+				labelTitle="Adicionar ao banco de horas"
+				labelDescription="Criando novo usuário para gerenciar."
 			/>
 		</>
 	);
