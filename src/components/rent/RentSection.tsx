@@ -4,13 +4,16 @@ import { BRL, clamp } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
+const FALLBACK_INTEREST = 0.12; // Use this interest rate if it cannot match any
+
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
-	const [name, setName] = useState("");
 	const [price, setPrice] = useState("2300");
 	const [downPay, setDownPay] = useState("60");
-	const [listInterest, setListInterest] = useState("0.1666666, 0.12"); // monthly
+
+	// Interest are applied using indexing, so installment at(0) uses tax at(0)
+	const [listInterest, setListInterest] = useState("0.1666666, 0.12");
 	const [listPeriod, setListPeriod] = useState("6, 10");
 
 	const nPreco = parseFloat(price) || 0;
@@ -33,26 +36,22 @@ export default function RentSection() {
 		<div className="p-4 border border-black/20 shadow-lg rounded">
 			<div className="flex justify-between gap-2">
 				<div>
-					<Title>Simular aluguel de iPhones</Title>
+					<Title>Simulação de aluguel de iPhones</Title>
 					<p className="text-xs">
-						As simulações usam a formula de juros simples
+						As simulações usam a fórmula de juros simples
 					</p>
 				</div>
 
-				<div className="bg-black/5 rounded px-3 flex gap-2 items-center">
+				<div
+					title="Mostrar mais detalhes sobre o cálculo dos valores"
+					className="bg-black/5 rounded px-3 flex gap-2 items-center"
+				>
 					<Checkbox checked={showDetails} onCheckedChange={setShowDetails} />
 					<span>Detalhes</span>
 				</div>
 			</div>
 
 			<div className="mt-4 flex flex-wrap md:grid grid-cols-3 gap-2">
-				<Input
-					className="w-auto"
-					title="Nome aparelho"
-					value={name}
-					onChange={(e) => setName(e.target.value)}
-				/>
-
 				<Input
 					className="w-auto"
 					type="number"
@@ -87,12 +86,6 @@ export default function RentSection() {
 			</div>
 
 			<div className="mt-4">
-				{name && (
-					<>
-						Simulando: <b>{name}</b>
-						<br />
-					</>
-				)}
 				Valor à vista: <b>{BRL(nPreco)}</b>
 				<br />
 				Entrada: <b>{BRL(entrada)}</b>
@@ -100,8 +93,11 @@ export default function RentSection() {
 
 			<ul className="mt-4">
 				{periodos.map((meses, i) => {
-					console.log(meses, i, taxas, taxas[i]);
-					const juros = simples(restante, taxas[i] || 0.12, meses);
+					const juros = simples(
+						restante,
+						taxas[i] || taxas.at(-1) || FALLBACK_INTEREST,
+						meses,
+					);
 					const restanteComJuros = restante + juros;
 					const parcelas = restanteComJuros / meses;
 					const total = entrada + restanteComJuros;

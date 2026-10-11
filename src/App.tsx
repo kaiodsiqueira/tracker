@@ -1,12 +1,13 @@
 import BackupSection from "./components/BackupSection";
 import RentSection from "./components/rent/RentSection";
 import { Title } from "./components/StaticComponents";
+import ToilSection from "./components/toil/ToilSection";
+
 import {
 	CreateDeliveryReminderButton,
 	ListDeliveryReminders,
 	useReminders,
 } from "./Reminders";
-import { NewToilUserButton, ToilList, useToil } from "./Toil";
 
 function ReminderSection() {
 	const { reminders, addReminder, removeReminder } = useReminders();
@@ -26,32 +27,6 @@ function ReminderSection() {
 			</div>
 
 			<ListDeliveryReminders reminders={reminders} onRemove={removeReminder} />
-		</div>
-	);
-}
-
-function ToilSection() {
-	const { toilUsers, addToilUser, removeToilUser, addAmount } = useToil();
-
-	return (
-		<div className="p-4 border border-black/20 shadow-lg rounded">
-			<div className="flex justify-between gap-2">
-				<div>
-					<Title>Banco de horas</Title>
-					<p className="text-xs">
-						Gerenciamento de horas extras e débitos de jornada, como feriados e
-						faltas
-					</p>
-				</div>
-
-				<NewToilUserButton addToilUser={addToilUser} />
-			</div>
-
-			<ToilList
-				data={toilUsers}
-				removeToilUser={removeToilUser}
-				addAmount={addAmount}
-			/>
 		</div>
 	);
 }

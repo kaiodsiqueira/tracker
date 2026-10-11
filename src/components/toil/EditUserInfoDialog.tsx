@@ -21,42 +21,52 @@ import {
 	SelectLabel,
 } from "@/components/ui/select";
 
-import type { ToilUser } from "@/Toil";
 import type { SS } from "@/utility";
 
 const AVAILABLE_AVATARS = [
-	{ label: "Masculino", value: "./avatar-man.png" },
-	{ label: "Feminino", value: "./avatar-woman.png" },
+	{ label: "Iniciais", value: "initials" },
+	{ label: "Masculino", value: "man" },
+	{ label: "Feminino", value: "woman" },
 ];
 
-const DEFAULT_AVATAR = "./avatar-man.png";
+export const AVATARS_URLS: {
+	[key: string]: string | ((name: string) => string);
+} = {
+	initials: (name: string) =>
+		`https://ui-avatars.com/api/?name=${name.split(" ").join("+")}&background=random`,
 
-export default function NewUserDialog({
-	isOpen,
-	setIsOpen,
-	addToilUser,
-}: {
+	man: "/avatares/avatar-man.png",
+	woman: "/avatares/avatar-woman.png",
+};
+
+const DEFAULT_AVATAR = "initials";
+
+export default function EditUserInfoDialog(props: {
 	isOpen: boolean;
 	setIsOpen: SS<boolean>;
-	addToilUser: (u: ToilUser) => void;
+	onSave: (infos: { name: string; avatar: string }) => void;
+
+	defaultName?: string;
+	defaultAvatar?: string;
 }) {
-	const [name, setName] = useState("");
-	const [avatar, setAvatar] = useState(DEFAULT_AVATAR);
+	const [name, setName] = useState(props.defaultName || "");
+	const [avatar, setAvatar] = useState(props.defaultAvatar || DEFAULT_AVATAR);
 
 	const submit = () => {
 		if (!name.length) return;
 
-		addToilUser({ name, avatar, amount: 0, logs: [] });
+		props.onSave({ name, avatar });
 
-		setName("");
-		setAvatar(DEFAULT_AVATAR);
-		setIsOpen(false);
+		//setName("");
+		//setAvatar(DEFAULT_AVATAR);
+
+		props.setIsOpen(false);
 	};
 
-	useHotkey("Enter", submit, { ignoreInputs: false, enabled: isOpen });
+	useHotkey("Enter", submit, { ignoreInputs: false, enabled: props.isOpen });
 
 	return (
-		<Dialog open={isOpen} onOpenChange={(o) => setIsOpen(o)}>
+		<Dialog open={props.isOpen} onOpenChange={(o) => props.setIsOpen(o)}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Adicionar ao banco de horas</DialogTitle>
@@ -98,7 +108,7 @@ export default function NewUserDialog({
 
 					<Button
 						theme="danger"
-						onClick={() => setIsOpen(false)}
+						onClick={() => props.setIsOpen(false)}
 						className="w-fit"
 					>
 						<Shortcut>{formatForDisplay("Escape")}</Shortcut> Cancelar

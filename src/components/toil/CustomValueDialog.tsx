@@ -51,7 +51,7 @@ export default function CustomValueDialog({
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Digite um valor personalizado</DialogTitle>
-					<DialogDescription>
+					<DialogDescription className="text-xs">
 						Em minutos, use números negativos para subtrair e positivo para
 						somar.
 					</DialogDescription>
@@ -69,35 +69,39 @@ export default function CustomValueDialog({
 					<button
 						type="button"
 						onClick={() => setCustomAmount((-FULL_PERIOD).toString())}
-						className="hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
+						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
 					>
+						<span className="text-[6px]">subtrair diária</span>
 						-8h 40m
 					</button>
 					<button
 						type="button"
 						onClick={() => setCustomAmount((-FULL_PERIOD / 2).toString())}
-						className="hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
+						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
 					>
+						<span className="text-[6px]">subtrair meia diária</span>
 						-4h 20m
 					</button>
 					<button
 						type="button"
 						onClick={() => setCustomAmount((FULL_PERIOD / 2).toString())}
-						className="hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
+						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
 					>
+						<span className="text-[6px]">somar meia diária</span>
 						+4h 20m
 					</button>
 					<button
 						type="button"
 						onClick={() => setCustomAmount(FULL_PERIOD.toString())}
-						className="hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
+						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
 					>
+						<span className="text-[6px]">somar diária</span>
 						+8h 40m
 					</button>
 				</div>
 
 				<Input
-					title="Motivo (ex. Esteve presente durante o feriado)"
+					title="Motivo (ex. Hora extra, sábado, manhã)"
 					type="text"
 					value={reason}
 					className="w-full"
