@@ -35,8 +35,8 @@ export const AVATARS_URLS: {
 	initials: (name: string) =>
 		`https://ui-avatars.com/api/?name=${name.split(" ").join("+")}&background=random`,
 
-	man: "/avatares/avatar-man.png",
-	woman: "/avatares/avatar-woman.png",
+	man: "./avatares/avatar-man.png",
+	woman: "./avatares/avatar-woman.png",
 };
 
 const DEFAULT_AVATAR = "initials";
