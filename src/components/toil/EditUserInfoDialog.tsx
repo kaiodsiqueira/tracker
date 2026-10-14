@@ -58,11 +58,10 @@ export default function EditUserInfoDialog(props: {
 	const submit = () => {
 		if (!name.length) return;
 
+		// Report changes to upwards
 		props.onSave({ name, avatar });
 
-		//setName("");
-		//setAvatar(DEFAULT_AVATAR);
-
+		// Close Dialog
 		props.setIsOpen(false);
 	};
 

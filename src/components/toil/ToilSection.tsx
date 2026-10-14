@@ -6,11 +6,7 @@ import EditUserInfoDialog from "./EditUserInfoDialog";
 import ToilList from "./ToilList";
 import { type ToilUser, useToil } from "./useToil";
 
-function NewToilUserButton({
-	addToilUser,
-}: {
-	addToilUser: (u: ToilUser) => void;
-}) {
+function NewToilUserButton(props: { addToilUser: (u: ToilUser) => void }) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	return (
@@ -30,7 +26,7 @@ function NewToilUserButton({
 				isOpen={isDialogOpen}
 				setIsOpen={setIsDialogOpen}
 				onSave={(infos) =>
-					addToilUser({
+					props.addToilUser({
 						...infos,
 						amount: 0,
 						logs: [],

@@ -14,7 +14,7 @@ import CustomValueDialog from "./CustomValueDialog";
 import EditUserInfoDialog, { AVATARS_URLS } from "./EditUserInfoDialog";
 import type { ToilUser, useToilReturn } from "./useToil";
 
-export default function User(props: {
+export default function DisplayToilUser(props: {
 	index: number;
 	superToil: useToilReturn;
 	user: ToilUser;
@@ -34,6 +34,9 @@ export default function User(props: {
 	avatarUrl =
 		typeof avatarUrl === "function" ? avatarUrl(props.user.name) : avatarUrl;
 
+	const negative = props.user.amount < 0;
+	const positive = props.user.amount > 0;
+
 	return (
 		<div className="border border-black/20 rounded p-2">
 			<div>
@@ -50,18 +53,10 @@ export default function User(props: {
 							<span
 								className={tw(
 									"font-bold",
-									props.user.amount < 0
-										? "text-red-800"
-										: props.user.amount > 0
-											? "text-green-800"
-											: "",
+									negative ? "text-red-800" : positive ? "text-green-800" : "",
 								)}
 							>
-								{props.user.amount < 0
-									? "DEVE"
-									: props.user.amount > 0
-										? "TEM"
-										: ""}
+								{negative ? "DEVE" : positive ? "TEM" : ""}
 							</span>{" "}
 							<span>{totalHours ? totalHours : "0h 0m"}</span>
 						</p>
