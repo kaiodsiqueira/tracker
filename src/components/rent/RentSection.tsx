@@ -10,7 +10,8 @@ export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
 	const [price, setPrice] = useState("2300");
-	const [downPay, setDownPay] = useState("60");
+	const [downPay, setDownPay] = useState("50");
+	const [fixedDownPay, setFixedDownPay] = useState("150");
 
 	// Interest are applied using indexing, so installment at(0) uses tax at(0)
 	const [listInterest, setListInterest] = useState("0.1666666, 0.12");
@@ -18,6 +19,7 @@ export default function RentSection() {
 
 	const nPreco = parseFloat(price) || 0;
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
+	const nEntradaFixa = parseFloat(fixedDownPay);
 
 	const taxas = listInterest
 		.split(",") // Split in commas
@@ -29,8 +31,10 @@ export default function RentSection() {
 		.map((p) => parseInt(p.trim(), 10)) // Parse as integer
 		.filter((p) => !Number.isNaN(p)); // Filter out NaN values
 
-	const entrada = nPreco * nPorcentagemDaEntrada;
-	const restante = nPreco - entrada;
+	const nEntradaRelativa = nPreco * nPorcentagemDaEntrada;
+	const nEntradaTotal = nEntradaRelativa + nEntradaFixa;
+
+	const restante = nPreco - nEntradaTotal;
 
 	return (
 		<div className="p-4 border border-black/20 shadow-lg rounded">
@@ -72,6 +76,13 @@ export default function RentSection() {
 
 				<Input
 					className="w-auto"
+					title="Entrada fixa (em R$)"
+					value={fixedDownPay}
+					onChange={(e) => setFixedDownPay(e.target.value)}
+				/>
+
+				<Input
+					className="w-auto"
 					title="Lista de taxa de juros (ao mês) [eg. 0.10, 0.12]"
 					value={listInterest}
 					onChange={(e) => setListInterest(e.target.value)}
@@ -88,35 +99,43 @@ export default function RentSection() {
 			<div className="mt-4">
 				Valor à vista: <b>{BRL(nPreco)}</b>
 				<br />
-				Entrada: <b>{BRL(entrada)}</b>
+				{showDetails ? (
+					<div>
+						Entrada: {downPay}% (<b>{BRL(nEntradaRelativa)}</b>) + Fixo (
+						<b>{BRL(nEntradaFixa)}</b>) = Total (<b>{BRL(nEntradaTotal)}</b>)
+					</div>
+				) : (
+					<div>
+						Entrada: <b>{BRL(nEntradaTotal)}</b>
+					</div>
+				)}
 			</div>
 
 			<ul className="mt-4">
 				{periodos.map((meses, i) => {
 					const juros = simples(
 						restante,
+						// Use matching tax, or the last one, or the fallback one
 						taxas[i] || taxas.at(-1) || FALLBACK_INTEREST,
 						meses,
 					);
+
 					const restanteComJuros = restante + juros;
 					const parcelas = restanteComJuros / meses;
-					const total = entrada + restanteComJuros;
+					const total = nEntradaTotal + restanteComJuros;
 
 					return (
 						<li key={meses} className="pb-3 flex flex-col border-b-2 mt-2">
 							<div>
 								<i>{meses}x</i> de <b>{BRL(parcelas)}</b>
 							</div>
-							{showDetails ? (
-								<>
-									<div>
-										Entrada (<b>{BRL(entrada)}</b>) + Restante (
-										<b>{BRL(restante)}</b>) + Juros (<b>{BRL(juros)}</b>) =
-										Total (<b>{BRL(total)}</b>)
-									</div>
 
-									<div></div>
-								</>
+							{showDetails ? (
+								<div>
+									Entrada (<b>{BRL(nEntradaTotal)}</b>) + Restante (
+									<b>{BRL(restante)}</b>) + Juros (<b>{BRL(juros)}</b>) = Total
+									(<b>{BRL(total)}</b>)
+								</div>
 							) : (
 								<div>{BRL(restanteComJuros)}</div>
 							)}

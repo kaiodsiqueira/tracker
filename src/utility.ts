@@ -8,6 +8,11 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+// Returns 0 if n is negative, 1 if n is 0 or 2 if n is positive
+export function whichSign(n: number): number {
+	return n < 0 ? 0 : n === 0 ? 1 : 2;
+}
+
 export function sign(value: number): string {
 	return value < 0 ? "-" : value === 0 ? "" : "+";
 }

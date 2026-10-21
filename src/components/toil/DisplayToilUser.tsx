@@ -7,7 +7,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { minutesToDuration, tw } from "@/utility";
+import { minutesToDuration, tw, whichSign } from "@/utility";
 import Button from "../Button";
 import ConfirmDialog from "../ConfirmDialog";
 import CustomValueDialog from "./CustomValueDialog";
@@ -34,8 +34,8 @@ export default function DisplayToilUser(props: {
 	avatarUrl =
 		typeof avatarUrl === "function" ? avatarUrl(props.user.name) : avatarUrl;
 
-	const negative = props.user.amount < 0;
-	const positive = props.user.amount > 0;
+	// 0 for negative, 1 for 0, 2 for positive
+	const sign = whichSign(props.user.amount);
 
 	return (
 		<div className="border border-black/20 rounded p-2">
@@ -53,10 +53,10 @@ export default function DisplayToilUser(props: {
 							<span
 								className={tw(
 									"font-bold",
-									negative ? "text-red-800" : positive ? "text-green-800" : "",
+									["text-red-800", "", "text-green-800"][sign],
 								)}
 							>
-								{negative ? "DEVE" : positive ? "TEM" : ""}
+								{["DEVE", "", "TEM"][sign]}
 							</span>{" "}
 							<span>{totalHours ? totalHours : "0h 0m"}</span>
 						</p>
