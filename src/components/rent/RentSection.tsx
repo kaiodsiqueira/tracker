@@ -67,7 +67,7 @@ export default function RentSection() {
 				<Input
 					className="w-auto"
 					type="number"
-					title="Porcentagem da entrada"
+					title="Porcentagem da entrada (em %)"
 					value={downPay}
 					onChange={(e) =>
 						setDownPay(clamp(Number(e.target.value), 0, 100).toString())
@@ -83,7 +83,7 @@ export default function RentSection() {
 
 				<Input
 					className="w-auto"
-					title="Lista de taxa de juros (ao mês) [eg. 0.10, 0.12]"
+					title="Taxa de juros dos períodos (ao mês)"
 					value={listInterest}
 					onChange={(e) => setListInterest(e.target.value)}
 				/>
