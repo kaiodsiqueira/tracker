@@ -5,10 +5,11 @@ import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
 const INSTALLMENTS = [
+	{ installments: 2, interestMultiplier: 1 },
+	{ installments: 4, interestMultiplier: 1 },
 	{ installments: 5, interestMultiplier: 1 },
-	{ installments: 6, interestMultiplier: 1 },
+	{ installments: 6, interestMultiplier: 1.2 },
 	{ installments: 8, interestMultiplier: 1.2 },
-	{ installments: 9, interestMultiplier: 1.2 },
 	{ installments: 10, interestMultiplier: 1.2 },
 ];
 
