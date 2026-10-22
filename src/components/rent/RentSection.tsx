@@ -4,7 +4,13 @@ import { BRL, clamp } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
-const FALLBACK_INTEREST = 0.12; // Use this interest rate if it cannot match any
+const INSTALLMENTS = [
+	{ installments: 5, interestMultiplier: 1 },
+	{ installments: 6, interestMultiplier: 1 },
+	{ installments: 8, interestMultiplier: 1.2 },
+	{ installments: 9, interestMultiplier: 1.2 },
+	{ installments: 10, interestMultiplier: 1.2 },
+];
 
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
@@ -13,28 +19,14 @@ export default function RentSection() {
 	const [downPay, setDownPay] = useState("50");
 	const [fixedDownPay, setFixedDownPay] = useState("150");
 
-	// Interest are applied using indexing, so installment at(0) uses tax at(0)
-	const [listInterest, setListInterest] = useState("0.1666666, 0.12");
-	const [listPeriod, setListPeriod] = useState("6, 10");
-
 	const nPreco = parseFloat(price) || 0;
 	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
 	const nEntradaFixa = parseFloat(fixedDownPay);
 
-	const taxas = listInterest
-		.split(",") // Split in commas
-		.map((p) => parseFloat(p.trim())) // Parse as integer
-		.filter((p) => !Number.isNaN(p)); // Filter out NaN values
-
-	const periodos = listPeriod
-		.split(",") // Split in commas
-		.map((p) => parseInt(p.trim(), 10)) // Parse as integer
-		.filter((p) => !Number.isNaN(p)); // Filter out NaN values
-
 	const nEntradaRelativa = nPreco * nPorcentagemDaEntrada;
 	const nEntradaTotal = nEntradaRelativa + nEntradaFixa;
 
-	const restante = nPreco - nEntradaTotal;
+	const nRestante = nPreco - nEntradaTotal;
 
 	return (
 		<div className="p-4 border border-black/20 shadow-lg rounded">
@@ -80,20 +72,6 @@ export default function RentSection() {
 					value={fixedDownPay}
 					onChange={(e) => setFixedDownPay(e.target.value)}
 				/>
-
-				<Input
-					className="w-auto"
-					title="Taxa de juros dos períodos (ao mês)"
-					value={listInterest}
-					onChange={(e) => setListInterest(e.target.value)}
-				/>
-
-				<Input
-					className="w-auto"
-					title="Períodos (6, 8, 10)"
-					value={listPeriod}
-					onChange={(e) => setListPeriod(e.target.value)}
-				/>
 			</div>
 
 			<div className="mt-4">
@@ -102,7 +80,7 @@ export default function RentSection() {
 				{showDetails ? (
 					<div>
 						Entrada: {downPay}% (<b>{BRL(nEntradaRelativa)}</b>) + Fixo (
-						<b>{BRL(nEntradaFixa)}</b>) = Total (<b>{BRL(nEntradaTotal)}</b>)
+						<b>{BRL(nEntradaFixa)}</b>) = Soma (<b>{BRL(nEntradaTotal)}</b>)
 					</div>
 				) : (
 					<div>
@@ -112,28 +90,27 @@ export default function RentSection() {
 			</div>
 
 			<ul className="mt-4">
-				{periodos.map((meses, i) => {
-					const juros = simples(
-						restante,
-						// Use matching tax, or the last one, or the fallback one
-						taxas[i] || taxas.at(-1) || FALLBACK_INTEREST,
-						meses,
-					);
+				{INSTALLMENTS.map((options) => {
+					const juros = nRestante * options.interestMultiplier;
 
-					const restanteComJuros = restante + juros;
-					const parcelas = restanteComJuros / meses;
+					const restanteComJuros = nRestante + juros;
+					const parcelas = restanteComJuros / options.installments;
+
 					const total = nEntradaTotal + restanteComJuros;
 
 					return (
-						<li key={meses} className="pb-3 flex flex-col border-b-2 mt-2">
+						<li
+							key={options.installments}
+							className="pb-3 flex flex-col border-b-2 mt-2"
+						>
 							<div>
-								<i>{meses}x</i> de <b>{BRL(parcelas)}</b>
+								<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>
 							</div>
 
 							{showDetails ? (
 								<div>
 									Entrada (<b>{BRL(nEntradaTotal)}</b>) + Restante (
-									<b>{BRL(restante)}</b>) + Juros (<b>{BRL(juros)}</b>) = Total
+									<b>{BRL(nRestante)}</b>) + Juros (<b>{BRL(juros)}</b>) = Total
 									(<b>{BRL(total)}</b>)
 								</div>
 							) : (
@@ -147,6 +124,8 @@ export default function RentSection() {
 	);
 }
 
+/*
 function simples(c: number, i: number, t: number) {
-	return c * i * t;
+  return c * i * t;
 }
+ */
