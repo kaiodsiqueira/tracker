@@ -48,79 +48,85 @@ export default function RentSection() {
 				</div>
 			</div>
 
-			<div className="mt-4 flex flex-wrap md:grid grid-cols-3 gap-2">
-				<Input
-					className="w-auto"
-					type="number"
-					title="Valor do aparelho (à vista)"
-					value={price}
-					onChange={(e) => setPrice(e.target.value)}
-				/>
-
-				<Input
-					className="w-auto"
-					type="number"
-					title="Porcentagem da entrada (em %)"
-					value={downPay}
-					onChange={(e) =>
-						setDownPay(clamp(Number(e.target.value), 0, 100).toString())
-					}
-				/>
-
-				<Input
-					className="w-auto"
-					title="Entrada fixa (em R$)"
-					value={fixedDownPay}
-					onChange={(e) => setFixedDownPay(e.target.value)}
-				/>
-			</div>
-
-			<div className="mt-4">
-				Valor à vista: <b>{BRL(nPreco)}</b>
-				<br />
-				{showDetails ? (
+			<div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+				{/* SIMULATION SECTION DIV */}
+				<div className="p-4 rounded bg-black/2">
 					<div>
-						Entrada: {downPay}% (<b>{BRL(nEntradaRelativa)}</b>) + Fixo (
-						<b>{BRL(nEntradaFixa)}</b>) = Soma (<b>{BRL(nEntradaTotal)}</b>)
-					</div>
-				) : (
-					<div>
-						Entrada: <b>{BRL(nEntradaTotal)}</b>
-					</div>
-				)}
-			</div>
-
-			<ul className="mt-4">
-				{INSTALLMENTS.map((options) => {
-					const juros = nRestante * options.interestMultiplier;
-
-					const restanteComJuros = nRestante + juros;
-					const parcelas = restanteComJuros / options.installments;
-
-					const total = nEntradaTotal + restanteComJuros;
-
-					return (
-						<li
-							key={options.installments}
-							className="pb-3 flex flex-col border-b-2 mt-2"
-						>
+						Valor à vista: <b>{BRL(nPreco)}</b>
+						<br />
+						{showDetails ? (
 							<div>
-								<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>
+								Entrada: {downPay}% (<b>{BRL(nEntradaRelativa)}</b>) + Fixo (
+								<b>{BRL(nEntradaFixa)}</b>) = Soma (<b>{BRL(nEntradaTotal)}</b>)
 							</div>
+						) : (
+							<div>
+								Entrada: <b>{BRL(nEntradaTotal)}</b>
+							</div>
+						)}
+					</div>
 
-							{showDetails ? (
-								<div>
-									Entrada (<b>{BRL(nEntradaTotal)}</b>) + Restante (
-									<b>{BRL(nRestante)}</b>) + Juros (<b>{BRL(juros)}</b>) = Total
-									(<b>{BRL(total)}</b>)
-								</div>
-							) : (
-								<div>{BRL(restanteComJuros)}</div>
-							)}
-						</li>
-					);
-				})}
-			</ul>
+					<ul className="mt-4">
+						{INSTALLMENTS.map((options) => {
+							const juros = nRestante * options.interestMultiplier;
+
+							const restanteComJuros = nRestante + juros;
+							const parcelas = restanteComJuros / options.installments;
+
+							const total = nEntradaTotal + restanteComJuros;
+
+							return (
+								<li
+									key={options.installments}
+									className="pb-3 flex flex-col border-b-2 mt-2"
+								>
+									<div>
+										<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>
+									</div>
+
+									{showDetails ? (
+										<div>
+											Entrada (<b>{BRL(nEntradaTotal)}</b>) + Restante (
+											<b>{BRL(nRestante)}</b>) + Juros (<b>{BRL(juros)}</b>) =
+											Total (<b>{BRL(total)}</b>)
+										</div>
+									) : (
+										<div>{BRL(restanteComJuros)}</div>
+									)}
+								</li>
+							);
+						})}
+					</ul>
+				</div>
+
+				{/* INPUTS SECTION DIV */}
+				<div className="p-4 rounded bg-black/2 flex flex-col gap-2">
+					<Input
+						className="w-auto"
+						type="number"
+						title="Valor do aparelho (à vista)"
+						value={price}
+						onChange={(e) => setPrice(e.target.value)}
+					/>
+
+					<Input
+						className="w-auto"
+						type="number"
+						title="Porcentagem da entrada (em %)"
+						value={downPay}
+						onChange={(e) =>
+							setDownPay(clamp(Number(e.target.value), 0, 100).toString())
+						}
+					/>
+
+					<Input
+						className="w-auto"
+						title="Entrada fixa (em R$)"
+						value={fixedDownPay}
+						onChange={(e) => setFixedDownPay(e.target.value)}
+					/>
+				</div>
+			</div>
 		</div>
 	);
 }
