@@ -39,27 +39,27 @@ export const AVATARS_URLS: {
 	woman: "./avatares/avatar-woman.png",
 };
 
-const DEFAULT_AVATAR = "initials";
-
 export default function EditUserInfoDialog(props: {
 	isOpen: boolean;
 	setIsOpen: SS<boolean>;
-	onSave: (infos: { name: string; avatar: string }) => void;
+	onSave: (infos: { name: string; avatar: string; salary: number }) => void;
 
-	defaultName?: string;
-	defaultAvatar?: string;
+	defaultName: string;
+	defaultAvatar: string;
+	defaultSalary: number;
 
 	labelTitle: string;
 	labelDescription: string;
 }) {
-	const [name, setName] = useState(props.defaultName || "");
-	const [avatar, setAvatar] = useState(props.defaultAvatar || DEFAULT_AVATAR);
+	const [name, setName] = useState(props.defaultName);
+	const [avatar, setAvatar] = useState(props.defaultAvatar);
+	const [salary, setSalary] = useState(props.defaultSalary);
 
 	const submit = () => {
 		if (!name.length) return;
 
 		// Report changes to upwards
-		props.onSave({ name, avatar });
+		props.onSave({ name, avatar, salary });
 
 		// Close Dialog
 		props.setIsOpen(false);
@@ -86,7 +86,7 @@ export default function EditUserInfoDialog(props: {
 				<Select
 					value={avatar}
 					title="Avatar do usuário"
-					onValueChange={(v) => setAvatar(v || DEFAULT_AVATAR)}
+					onValueChange={(v) => setAvatar(v || props.defaultAvatar)}
 					items={AVAILABLE_AVATARS}
 				>
 					<SelectContent>
@@ -100,6 +100,17 @@ export default function EditUserInfoDialog(props: {
 						</SelectGroup>
 					</SelectContent>
 				</Select>
+
+				<Input
+					value={salary}
+					type="number"
+					className="w-full"
+					title="Sálario Mensal"
+					placeholder="R$"
+					onChange={(e) =>
+						setSalary(parseInt(e.target.value, 10) || props.defaultSalary)
+					}
+				/>
 
 				<DialogFooter className="flex-row justify-center">
 					<Button theme="success" onClick={submit} className="w-fit">

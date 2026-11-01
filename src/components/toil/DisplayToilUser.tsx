@@ -7,12 +7,36 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { minutesToDuration, tw, whichSign } from "@/utility";
+import { BRL, minutesToDuration, tw, whichSign } from "@/utility";
 import Button from "../Button";
+import { ColoredNumberAnwser } from "../Common";
 import ConfirmDialog from "../ConfirmDialog";
-import CustomValueDialog from "./CustomValueDialog";
+import { SimpleWarnMessage } from "../StaticComponents";
+import CustomValueDialog, {
+	DAILY_WORKING_HOURS_IN_MINUTES,
+	MONTHLY_WORKING_DAYS,
+} from "./CustomValueDialog";
 import EditUserInfoDialog, { AVATARS_URLS } from "./EditUserInfoDialog";
 import type { ToilUser, useToilReturn } from "./useToil";
+
+// 0 for negative, 1 for 0, 2 for positive
+function getEquivalentHoursValueMessageFor(user: ToilUser) {
+	if (!user.salary)
+		return (
+			<SimpleWarnMessage>
+				Defina o salário do usuário para calcular o valor equivalente!
+			</SimpleWarnMessage>
+		);
+
+	const wagePerDay = user.salary / MONTHLY_WORKING_DAYS;
+	const wagePerMinute = wagePerDay / DAILY_WORKING_HOURS_IN_MINUTES;
+
+	return (
+		<ColoredNumberAnwser question="Equivale a: " sign={whichSign(user.amount)}>
+			{BRL(wagePerMinute * user.amount)}
+		</ColoredNumberAnwser>
+	);
+}
 
 export default function DisplayToilUser(props: {
 	index: number;
@@ -37,6 +61,8 @@ export default function DisplayToilUser(props: {
 	// 0 for negative, 1 for 0, 2 for positive
 	const sign = whichSign(props.user.amount);
 
+	const hoursEquivalent = getEquivalentHoursValueMessageFor(props.user);
+
 	return (
 		<div className="border border-black/20 rounded p-2">
 			<div>
@@ -60,6 +86,8 @@ export default function DisplayToilUser(props: {
 							</span>{" "}
 							<span>{totalHours ? totalHours : "0h 0m"}</span>
 						</p>
+
+						{hoursEquivalent}
 					</div>
 
 					<DropdownMenu>
@@ -153,8 +181,11 @@ export default function DisplayToilUser(props: {
 			<EditUserInfoDialog
 				isOpen={isEditingUserDialogOpen}
 				setIsOpen={setIsEditingUserDialogOpen}
+				//
 				defaultName={props.user.name}
 				defaultAvatar={props.user.avatar}
+				defaultSalary={props.user.salary}
+				//
 				onSave={(infos) =>
 					props.superToil.changeUser(props.index, (u) => ({
 						...u, // Write original user first

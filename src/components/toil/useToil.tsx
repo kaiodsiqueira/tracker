@@ -5,6 +5,7 @@ export type ToilUser = {
 	name: string;
 	avatar: string;
 	amount: number;
+	salary: number;
 	logs: string[];
 };
 

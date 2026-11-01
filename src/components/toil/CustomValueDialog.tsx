@@ -12,9 +12,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+
 import { minutesToDuration, type SS, sign } from "@/utility";
 
-export const FULL_PERIOD = 520; // 8h 40m
+export const MONTHLY_WORKING_DAYS = 24; // Dias trabalhados por mês
+export const DAILY_WORKING_HOURS_IN_MINUTES = 520; // 8h 40m
 
 export default function CustomValueDialog({
 	isOpen,
@@ -67,32 +69,44 @@ export default function CustomValueDialog({
 
 				<div className="flex gap-1">
 					<button
+						tabIndex={-1}
 						type="button"
-						onClick={() => setCustomAmount((-FULL_PERIOD).toString())}
+						onClick={() =>
+							setCustomAmount((-DAILY_WORKING_HOURS_IN_MINUTES).toString())
+						}
 						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
 					>
 						<span className="text-[6px]">subtrair diária</span>
 						-8h 40m
 					</button>
 					<button
+						tabIndex={-1}
 						type="button"
-						onClick={() => setCustomAmount((-FULL_PERIOD / 2).toString())}
+						onClick={() =>
+							setCustomAmount((-DAILY_WORKING_HOURS_IN_MINUTES / 2).toString())
+						}
 						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
 					>
 						<span className="text-[6px]">subtrair meia diária</span>
 						-4h 20m
 					</button>
 					<button
+						tabIndex={-1}
 						type="button"
-						onClick={() => setCustomAmount((FULL_PERIOD / 2).toString())}
+						onClick={() =>
+							setCustomAmount((DAILY_WORKING_HOURS_IN_MINUTES / 2).toString())
+						}
 						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
 					>
 						<span className="text-[6px]">somar meia diária</span>
 						+4h 20m
 					</button>
 					<button
+						tabIndex={-1}
 						type="button"
-						onClick={() => setCustomAmount(FULL_PERIOD.toString())}
+						onClick={() =>
+							setCustomAmount(DAILY_WORKING_HOURS_IN_MINUTES.toString())
+						}
 						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
 					>
 						<span className="text-[6px]">somar diária</span>

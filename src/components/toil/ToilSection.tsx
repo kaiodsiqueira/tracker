@@ -2,6 +2,10 @@ import { Plus, User } from "lucide-react";
 import { useState } from "react";
 import Button from "../Button";
 import { Title } from "../StaticComponents";
+import {
+	DAILY_WORKING_HOURS_IN_MINUTES,
+	MONTHLY_WORKING_DAYS,
+} from "./CustomValueDialog";
 import EditUserInfoDialog from "./EditUserInfoDialog";
 import ToilList from "./ToilList";
 import { type ToilUser, useToil } from "./useToil";
@@ -25,6 +29,11 @@ function NewToilUserButton(props: { addToilUser: (u: ToilUser) => void }) {
 			<EditUserInfoDialog
 				isOpen={isDialogOpen}
 				setIsOpen={setIsDialogOpen}
+				//
+				defaultName=""
+				defaultAvatar="initials"
+				defaultSalary={1000}
+				//
 				onSave={(infos) =>
 					props.addToilUser({
 						...infos,
@@ -57,6 +66,13 @@ export default function ToilSection() {
 			</div>
 
 			<ToilList superToil={superToil} />
+
+			<p className="mt-4 text-[10px] text-black/40">
+				* Cálculos de valor equivalente das horas utilizam{" "}
+				{MONTHLY_WORKING_DAYS} dias trabalhados por mês e{" "}
+				{DAILY_WORKING_HOURS_IN_MINUTES} minutos trabalhados por dia. Valores
+				que atualmente só podem serem alterado no código!
+			</p>
 		</div>
 	);
 }

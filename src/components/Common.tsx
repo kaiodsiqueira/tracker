@@ -1,4 +1,5 @@
 import type { SelectRootProps } from "@base-ui/react";
+import type { PropsWithChildren } from "react";
 
 import {
 	SelectTrigger,
@@ -7,6 +8,24 @@ import {
 } from "@/components/ui/select";
 
 import { tw } from "../utility";
+
+export function ColoredNumberAnwser(
+	props: PropsWithChildren & { question?: string; sign: number },
+) {
+	return (
+		<p className={tw("text-xs leading-tight")}>
+			{props.question}
+			<span
+				className={tw(
+					"text-xs leading-tight",
+					["text-red-800", "text-black/25", "text-green-800"][props.sign],
+				)}
+			>
+				{props.children}
+			</span>
+		</p>
+	);
+}
 
 export type InputProps = React.DetailedHTMLProps<
 	React.InputHTMLAttributes<HTMLInputElement>,
