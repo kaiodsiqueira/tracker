@@ -4,6 +4,9 @@ import { BRL, clamp } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
+const DOWN_PAYMENT_PERCENT = 50;
+const FIXED_DOWN_PAYMENT = 150;
+
 const INSTALLMENTS = [
 	{ installments: 2, interestMultiplier: 1 },
 	{ installments: 4, interestMultiplier: 1 },
@@ -17,15 +20,16 @@ export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
 	const [price, setPrice] = useState("2300");
-	const [downPay, setDownPay] = useState("50");
-	const [fixedDownPay, setFixedDownPay] = useState("150");
+	const [tradein, setTradein] = useState("0");
 
 	const nPreco = parseFloat(price) || 0;
-	const nPorcentagemDaEntrada = parseFloat(downPay) / 100;
-	const nEntradaFixa = parseFloat(fixedDownPay);
+	const nCreditoDeTroca = parseFloat(tradein) || 0;
+	const nPorcentagemDaEntrada = DOWN_PAYMENT_PERCENT / 100;
 
 	const nEntradaRelativa = nPreco * nPorcentagemDaEntrada;
-	const nEntradaTotal = nEntradaRelativa + nEntradaFixa;
+	const nEntradaTotal = nEntradaRelativa + FIXED_DOWN_PAYMENT;
+	const nEntradaEfetiva =
+		nEntradaTotal - Math.min(nCreditoDeTroca, nEntradaTotal);
 
 	const nRestante = nPreco - nEntradaTotal;
 
@@ -50,23 +54,25 @@ export default function RentSection() {
 
 			<div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				{/* SIMULATION SECTION DIV */}
-				<div className="p-4 rounded bg-black/2">
+				<div className="p-4 rounded border bg-black/1">
 					<div>
 						Valor à vista: <b>{BRL(nPreco)}</b>
 						<br />
 						{showDetails ? (
 							<div>
-								Entrada: {downPay}% (<b>{BRL(nEntradaRelativa)}</b>) + Fixo (
-								<b>{BRL(nEntradaFixa)}</b>) = Soma (<b>{BRL(nEntradaTotal)}</b>)
+								Entrada: {DOWN_PAYMENT_PERCENT}% (<b>{BRL(nEntradaRelativa)}</b>
+								) + Fixo (<b>{BRL(FIXED_DOWN_PAYMENT)}</b>) - Troca (
+								<b>{BRL(nCreditoDeTroca)}</b>) = Soma (
+								<b>{BRL(nEntradaEfetiva)}</b>)
 							</div>
 						) : (
 							<div>
-								Entrada: <b>{BRL(nEntradaTotal)}</b>
+								Entrada: <b>{BRL(nEntradaEfetiva)}</b>
 							</div>
 						)}
 					</div>
 
-					<ul className="mt-4">
+					<ul className="bg-black/10 flex flex-col justify-between gap-px mt-4">
 						{INSTALLMENTS.map((options) => {
 							const juros = nRestante * options.interestMultiplier;
 
@@ -78,7 +84,7 @@ export default function RentSection() {
 							return (
 								<li
 									key={options.installments}
-									className="pb-3 flex flex-col border-b-2 mt-2"
+									className="bg-white py-2 flex flex-col"
 								>
 									<div>
 										<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>
@@ -100,8 +106,11 @@ export default function RentSection() {
 				</div>
 
 				{/* INPUTS SECTION DIV */}
-				<div className="p-4 rounded bg-black/2 flex flex-col gap-2">
+				<div className="p-4 flex flex-col gap-2">
+					<h1 className="text-2xl font-bold">Parâmetros</h1>
+
 					<Input
+						containerClassName="mt-2"
 						className="w-auto"
 						type="number"
 						title="Valor do aparelho (à vista)"
@@ -111,20 +120,18 @@ export default function RentSection() {
 
 					<Input
 						className="w-auto"
-						type="number"
-						title="Porcentagem da entrada (em %)"
-						value={downPay}
-						onChange={(e) =>
-							setDownPay(clamp(Number(e.target.value), 0, 100).toString())
-						}
+						title="Crédito de troca (em R$)"
+						value={tradein}
+						onChange={(e) => setTradein(e.target.value)}
 					/>
+					<p className="text-xs font-medium text-black/75">
+						Usado quando um aparelho está sendo entregue como parte da entrada,
+						este valor será abatido da entrada e irá gerar um valor de torna se
+						necessário.
+					</p>
 
-					<Input
-						className="w-auto"
-						title="Entrada fixa (em R$)"
-						value={fixedDownPay}
-						onChange={(e) => setFixedDownPay(e.target.value)}
-					/>
+					<h1 className="mt-4 text-2xl font-bold">Como é feito</h1>
+					<p>A entrada é equivalente a</p>
 				</div>
 			</div>
 		</div>
