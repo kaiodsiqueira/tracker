@@ -7,7 +7,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MaskBRL } from "@/lib/masks";
 import { BRL, minutesToDuration, tw, whichSign } from "@/utility";
 import Button from "../Button";
 import { ColoredNumberAnwser } from "../Common";
@@ -185,7 +184,7 @@ export default function DisplayToilUser(props: {
 				//
 				defaultName={props.user.name}
 				defaultAvatar={props.user.avatar}
-				defaultSalary={props.user.salary || MaskBRL(1000)}
+				defaultSalary={props.user.salary || 100000}
 				//
 				onSave={(infos) =>
 					props.superToil.changeUser(props.index, (u) => ({

@@ -2,7 +2,7 @@ import { Calculator } from "lucide-react";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
-import { BRL, clamp } from "@/utility";
+import { BRL } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
