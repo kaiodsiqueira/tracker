@@ -1,5 +1,7 @@
+import { Calculator } from "lucide-react";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MaskBRL, UnmaskBRL } from "@/lib/masks";
 import { BRL, clamp } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
@@ -19,14 +21,15 @@ const INSTALLMENTS = [
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
-	const [price, setPrice] = useState("2300");
-	const [tradein, setTradein] = useState("0");
+	/* const [test, setTest] = useState(MaskBRL("0")); */
+	const [price, setPrice] = useState(MaskBRL(235000));
+	const [tradein, setTradein] = useState(MaskBRL(0));
 
-	const nPreco = parseFloat(price) || 0;
-	const nCreditoDeTroca = parseFloat(tradein) || 0;
-	const nPorcentagemDaEntrada = DOWN_PAYMENT_PERCENT / 100;
+	const nPreco = UnmaskBRL(price);
+	const nCreditoDeTroca = UnmaskBRL(tradein);
 
-	const nEntradaRelativa = nPreco * nPorcentagemDaEntrada;
+	const nEntradaPorcentagem = DOWN_PAYMENT_PERCENT / 100;
+	const nEntradaRelativa = nPreco * nEntradaPorcentagem;
 	const nEntradaTotal = nEntradaRelativa + FIXED_DOWN_PAYMENT;
 	const nEntradaEfetiva =
 		nEntradaTotal - Math.min(nCreditoDeTroca, nEntradaTotal);
@@ -34,25 +37,28 @@ export default function RentSection() {
 	const nRestante = nPreco - nEntradaTotal;
 
 	return (
-		<div className="p-4 border border-black/20 shadow-lg rounded">
-			<div className="flex justify-between gap-2">
-				<div>
-					<Title>Simulação de aluguel de iPhones</Title>
-					<p className="text-xs">
-						As simulações usam a fórmula de juros simples
-					</p>
+		<div className="border border-black/20 shadow-lg rounded">
+			<div className="p-4 text-white flex justify-between gap-2 bg-slate-800">
+				<div className="flex gap-2 items-center">
+					<Calculator size={30} />
+					<div>
+						<Title>Simular Aluguéis de iPhones</Title>
+						<p className="text-xs">
+							Ferramenta rápida para orçamento dos aluguéis
+						</p>
+					</div>
 				</div>
 
 				<div
 					title="Mostrar mais detalhes sobre o cálculo dos valores"
-					className="bg-black/5 rounded px-3 flex gap-2 items-center"
+					className="bg-slate-700 text-sm rounded px-3 flex gap-2 items-center"
 				>
 					<Checkbox checked={showDetails} onCheckedChange={setShowDetails} />
 					<span>Detalhes</span>
 				</div>
 			</div>
 
-			<div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				{/* SIMULATION SECTION DIV */}
 				<div className="p-4 rounded border bg-black/1">
 					<div>
@@ -107,22 +113,26 @@ export default function RentSection() {
 
 				{/* INPUTS SECTION DIV */}
 				<div className="p-4 flex flex-col gap-2">
-					<h1 className="text-2xl font-bold">Parâmetros</h1>
+					<div>
+						<h1 className="text-2xl font-bold leading-tight">Parâmetros</h1>
+						<p className="text-sm">
+							Ajuste os valores de acordo com a sua venda.
+						</p>
+					</div>
 
 					<Input
 						containerClassName="mt-2"
 						className="w-auto"
-						type="number"
 						title="Valor do aparelho (à vista)"
 						value={price}
-						onChange={(e) => setPrice(e.target.value)}
+						onChange={(e) => setPrice(MaskBRL(e.target.value))}
 					/>
 
 					<Input
 						className="w-auto"
 						title="Crédito de troca (em R$)"
 						value={tradein}
-						onChange={(e) => setTradein(e.target.value)}
+						onChange={(e) => setTradein(MaskBRL(e.target.value))}
 					/>
 					<p className="text-xs font-medium text-black/75">
 						Usado quando um aparelho está sendo entregue como parte da entrada,
@@ -130,8 +140,22 @@ export default function RentSection() {
 						necessário.
 					</p>
 
-					<h1 className="mt-4 text-2xl font-bold">Como é feito</h1>
-					<p>A entrada é equivalente a</p>
+					{/* <Input
+            value={test}
+            onChange={e=>setTest(MaskBRL(e.target.value))}
+						className="w-auto"
+						title="Crédito de troca (em R$)"
+					/>
+					<p className="text-xs font-medium text-black/75">
+					  {UnmaskBRL(test)}
+					</p> */}
+
+					<h1 className="mt-4 text-2xl font-bold">Sobre</h1>
+					<p>
+						A simulação mostra as parcelas mensais, porém, parcelamento
+						quinzenal ou semanal também estão disponíveis via divisão dos mesmos
+						valores.
+					</p>
 				</div>
 			</div>
 		</div>

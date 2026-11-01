@@ -20,7 +20,7 @@ import {
 	SelectItem,
 	SelectLabel,
 } from "@/components/ui/select";
-
+import { MaskBRL, UnmaskBRL } from "@/lib/masks";
 import type { SS } from "@/utility";
 
 const AVAILABLE_AVATARS = [
@@ -53,13 +53,14 @@ export default function EditUserInfoDialog(props: {
 }) {
 	const [name, setName] = useState(props.defaultName);
 	const [avatar, setAvatar] = useState(props.defaultAvatar);
-	const [salary, setSalary] = useState(props.defaultSalary);
+
+	const [salary, setSalary] = useState(MaskBRL(props.defaultSalary * 100));
 
 	const submit = () => {
 		if (!name.length) return;
 
 		// Report changes to upwards
-		props.onSave({ name, avatar, salary });
+		props.onSave({ name, avatar, salary: UnmaskBRL(salary) });
 
 		// Close Dialog
 		props.setIsOpen(false);
@@ -103,13 +104,9 @@ export default function EditUserInfoDialog(props: {
 
 				<Input
 					value={salary}
-					type="number"
 					className="w-full"
 					title="Sálario Mensal"
-					placeholder="R$"
-					onChange={(e) =>
-						setSalary(parseInt(e.target.value, 10) || props.defaultSalary)
-					}
+					onChange={(e) => setSalary(MaskBRL(e.target.value))}
 				/>
 
 				<DialogFooter className="flex-row justify-center">
