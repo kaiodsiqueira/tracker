@@ -6,6 +6,7 @@ import { BRL } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
+// Valores fixos para o cálculo de entrada e parcelas
 const DOWN_PAYMENT_PERCENT = 50;
 const FIXED_DOWN_PAYMENT = 150;
 
@@ -21,7 +22,6 @@ const INSTALLMENTS = [
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
-	/* const [test, setTest] = useState(MaskBRL("0")); */
 	const [price, setPrice] = useState(MaskBRL(235000));
 	const [tradein, setTradein] = useState(MaskBRL(0));
 
@@ -30,6 +30,7 @@ export default function RentSection() {
 
 	const nEntradaPorcentagem = DOWN_PAYMENT_PERCENT / 100;
 	const nEntradaRelativa = nPreco * nEntradaPorcentagem;
+
 	const nEntradaTotal = nEntradaRelativa + FIXED_DOWN_PAYMENT;
 	const nEntradaEfetiva =
 		nEntradaTotal - Math.min(nCreditoDeTroca, nEntradaTotal);
@@ -37,8 +38,8 @@ export default function RentSection() {
 	const nRestante = nPreco - nEntradaTotal;
 
 	return (
-		<div className="border border-black/20 shadow-lg rounded">
-			<div className="p-4 text-white flex justify-between gap-2 bg-slate-800">
+		<section className="border border-black/20 shadow-lg rounded">
+			<header className="p-4 text-white flex justify-between gap-2 bg-slate-800">
 				<div className="flex gap-2 items-center">
 					<Calculator size={30} />
 					<div>
@@ -56,7 +57,7 @@ export default function RentSection() {
 					<Checkbox checked={showDetails} onCheckedChange={setShowDetails} />
 					<span>Detalhes</span>
 				</div>
-			</div>
+			</header>
 
 			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				{/* SIMULATION SECTION DIV */}
@@ -92,9 +93,9 @@ export default function RentSection() {
 									key={options.installments}
 									className="bg-white py-2 flex flex-col"
 								>
-									<div>
+									<p>
 										<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>
-									</div>
+									</p>
 
 									{showDetails ? (
 										<div>
@@ -140,16 +141,6 @@ export default function RentSection() {
 						necessário.
 					</p>
 
-					{/* <Input
-            value={test}
-            onChange={e=>setTest(MaskBRL(e.target.value))}
-						className="w-auto"
-						title="Crédito de troca (em R$)"
-					/>
-					<p className="text-xs font-medium text-black/75">
-					  {UnmaskBRL(test)}
-					</p> */}
-
 					<h1 className="mt-4 text-2xl font-bold">Sobre</h1>
 					<p>
 						A simulação mostra as parcelas mensais, porém, parcelamento
@@ -158,12 +149,6 @@ export default function RentSection() {
 					</p>
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 }
-
-/*
-function simples(c: number, i: number, t: number) {
-  return c * i * t;
-}
- */
