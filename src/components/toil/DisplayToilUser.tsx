@@ -8,6 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BRL, minutesToDuration, tw, whichSign } from "@/utility";
+import Badge from "../Badge";
 import Button from "../Button";
 import { ColoredNumberAnwser } from "../Common";
 import ConfirmDialog from "../ConfirmDialog";
@@ -23,7 +24,7 @@ import type { ToilUser, useToilReturn } from "./useToil";
 function getEquivalentHoursValueMessageFor(user: ToilUser) {
 	if (!user.salary)
 		return (
-			<SimpleWarnMessage>
+			<SimpleWarnMessage className="mt-2">
 				Defina o salário do usuário para calcular o valor equivalente!
 			</SimpleWarnMessage>
 		);
@@ -64,26 +65,19 @@ export default function DisplayToilUser(props: {
 	const hoursEquivalent = getEquivalentHoursValueMessageFor(props.user);
 
 	return (
-		<div className="border border-black/20 rounded p-2">
+		<div className="border border-slate-800/20 rounded-lg p-3">
 			<div>
-				<div className="flex justify-between items-center gap-2">
+				<header className="flex justify-between items-start gap-3">
 					<img
 						src={avatarUrl}
 						alt="the user's avatar"
-						className="rounded-full w-fit h-10 object-cover aspect-square"
+						className="rounded-full mt-1 w-fit h-8 object-cover aspect-square"
 					/>
 
 					<div>
-						<p className="font-medium text-lg">{props.user.name}</p>
+						<p className="font-medium text-md">{props.user.name}</p>
 						<p className="text-sm">
-							<span
-								className={tw(
-									"font-bold",
-									["text-red-800", "", "text-green-800"][sign],
-								)}
-							>
-								{["DEVE", "", "TEM"][sign]}
-							</span>{" "}
+							<GetBadgeForSign sign={sign} />
 							<span>{totalHours ? totalHours : "0h 0m"}</span>
 						</p>
 
@@ -91,8 +85,12 @@ export default function DisplayToilUser(props: {
 					</div>
 
 					<DropdownMenu>
-						<DropdownMenuTrigger render={<Button className="ml-auto" />}>
-							<EllipsisVertical />
+						<DropdownMenuTrigger
+							render={
+								<Button className="py-4 hover:bg-black/5 bg-transparent border-none ml-auto" />
+							}
+						>
+							<EllipsisVertical size={20} />
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-fit max-w-50">
 							<DropdownMenuItem
@@ -138,9 +136,9 @@ export default function DisplayToilUser(props: {
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
-				</div>
+				</header>
 
-				<ul className="flex flex-col px-2 py-1 bg-black/2 border rounded mt-2 text-xs">
+				<ul className="flex flex-col px-2 py-1 bg-black/2 border rounded mt-4 text-xs">
 					{props.user.logs?.length ? (
 						props.user.logs.map((l) => (
 							<li
@@ -156,6 +154,12 @@ export default function DisplayToilUser(props: {
 						<span className="opacity-40">Nenhum registro ainda</span>
 					)}
 				</ul>
+
+				{props.user.salary && (
+					<p className="text-[8px] opacity-25 mt-2">
+						Sálario de {BRL(props.user.salary)}
+					</p>
+				)}
 			</div>
 
 			<CustomValueDialog
@@ -198,4 +202,14 @@ export default function DisplayToilUser(props: {
 			/>
 		</div>
 	);
+}
+
+function GetBadgeForSign({ sign }: { sign: number }) {
+	if (sign === 0) {
+		return <Badge color="error">DEVE</Badge>;
+	} else if (sign === 1) {
+		return <Badge color="secondary">NEUTRO</Badge>;
+	} else {
+		return <Badge color="success">TEM</Badge>;
+	}
 }

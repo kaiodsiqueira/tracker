@@ -1,9 +1,17 @@
 import { CircleSlash } from "lucide-react";
 import type { PropsWithChildren } from "react";
+import { tw } from "@/utility";
 
-export function SimpleWarnMessage(props: PropsWithChildren) {
+export function SimpleWarnMessage(
+	props: PropsWithChildren & { className?: string },
+) {
 	return (
-		<div className="text-xs leading-tight p-1 rounded border bg-yellow-50 border-yellow-200 text-yellow-800">
+		<div
+			className={tw(
+				"text-xs leading-tight p-1 rounded border bg-yellow-50 border-yellow-200 text-yellow-800",
+				props.className,
+			)}
+		>
 			{props.children}
 		</div>
 	);

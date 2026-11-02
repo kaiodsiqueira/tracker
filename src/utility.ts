@@ -1,4 +1,5 @@
 export { twMerge as tw } from "tailwind-merge";
+export type { VariantProps as vp } from "tailwind-variants";
 export { tv as variants } from "tailwind-variants";
 
 import {
