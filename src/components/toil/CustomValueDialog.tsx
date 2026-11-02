@@ -69,14 +69,15 @@ export default function CustomValueDialog({
 					onChange={(e) => setCustomAmount(e.target.value)}
 				/>
 
+				{/* DIV WITH COMMON PRESETS FOR MINUTES ADJUSTMENT */}
 				<div className="grid grid-cols-5 gap-1">
 					<MinutePresetButton
-						name="Subtraír Diária"
+						name="Subtrair Diária"
 						value={-DAILY_WORKING_HOURS_IN_MINUTES}
 						setCustomAmount={setCustomAmount}
 					/>
 					<MinutePresetButton
-						name="Subtraír Meia Diária"
+						name="Subtrair Meia Diária"
 						value={-DAILY_WORKING_HOURS_IN_MINUTES / 2}
 						setCustomAmount={setCustomAmount}
 					/>
