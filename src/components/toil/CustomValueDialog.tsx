@@ -12,7 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-
+import { MaskMinutes, UnmaskMinutes } from "@/lib/masks";
 import { minutesToDuration, type SS, sign, tw, whichSign } from "@/utility";
 
 export const MONTHLY_WORKING_DAYS = 24; // Dias trabalhados por mês
@@ -33,7 +33,7 @@ export default function CustomValueDialog({
 	const [reason, setReason] = useState("");
 
 	const submit = () => {
-		const amount = parseInt(customAmount, 10) || 0;
+		const amount = UnmaskMinutes(customAmount);
 
 		if (amount === 0) return;
 		if (reason.trim().length === 0) return;
@@ -63,10 +63,11 @@ export default function CustomValueDialog({
 
 				<Input
 					type="text"
-					title="Valor da alteração (em minutos)"
+					placeholder="eg.: 120, -30, 1h30m, -2h"
+					title={`Valor da alteração (${UnmaskMinutes(customAmount)})`}
 					value={customAmount}
 					className="w-full"
-					onChange={(e) => setCustomAmount(e.target.value)}
+					onChange={(e) => setCustomAmount(MaskMinutes(e.target.value))}
 				/>
 
 				{/* DIV WITH COMMON PRESETS FOR MINUTES ADJUSTMENT */}

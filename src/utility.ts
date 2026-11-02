@@ -18,6 +18,10 @@ export function sign(value: number): string {
 	return value < 0 ? "-" : value === 0 ? "" : "+";
 }
 
+export function MathSign(value: number): number {
+	return value < 0 ? -1 : value === 0 ? 1 : 1;
+}
+
 export function getPersistentStorage(name: string) {
 	try {
 		const stringyfiedData = localStorage.getItem(name);
