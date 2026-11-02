@@ -164,6 +164,7 @@ export default function DisplayToilUser(props: {
 
 			<CustomValueDialog
 				isOpen={isCustomValueDrawerOpen}
+				currentAmount={props.user.amount}
 				setIsOpen={setIsCustomValueDrawerOpen}
 				modifyPersistentAmount={props.superToil.addAmount.bind(
 					null,

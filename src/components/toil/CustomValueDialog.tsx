@@ -13,7 +13,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 
-import { minutesToDuration, type SS, sign } from "@/utility";
+import { minutesToDuration, type SS, sign, tw, whichSign } from "@/utility";
 
 export const MONTHLY_WORKING_DAYS = 24; // Dias trabalhados por mês
 export const DAILY_WORKING_HOURS_IN_MINUTES = 520; // 8h 40m
@@ -21,9 +21,11 @@ export const DAILY_WORKING_HOURS_IN_MINUTES = 520; // 8h 40m
 export default function CustomValueDialog({
 	isOpen,
 	setIsOpen,
+	currentAmount,
 	modifyPersistentAmount,
 }: {
 	isOpen: boolean;
+	currentAmount: number;
 	setIsOpen: SS<boolean>;
 	modifyPersistentAmount: (a: number, reason: string) => void;
 }) {
@@ -54,68 +56,52 @@ export default function CustomValueDialog({
 				<DialogHeader>
 					<DialogTitle>Digite um valor personalizado</DialogTitle>
 					<DialogDescription className="text-xs">
-						Em minutos, use números negativos para subtrair e positivo para
-						somar.
+						Em minutos, use números negativos para subtrair ou positivo para
+						somar ao saldo atual no banco
 					</DialogDescription>
 				</DialogHeader>
 
 				<Input
 					type="text"
-					title="Valor (ex. -25, 20) [em minutos]"
+					title="Valor da alteração (em minutos)"
 					value={customAmount}
 					className="w-full"
 					onChange={(e) => setCustomAmount(e.target.value)}
 				/>
 
-				<div className="flex gap-1">
-					<button
-						tabIndex={-1}
-						type="button"
-						onClick={() =>
-							setCustomAmount((-DAILY_WORKING_HOURS_IN_MINUTES).toString())
-						}
-						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
-					>
-						<span className="text-[6px]">subtrair diária</span>
-						-8h 40m
-					</button>
-					<button
-						tabIndex={-1}
-						type="button"
-						onClick={() =>
-							setCustomAmount((-DAILY_WORKING_HOURS_IN_MINUTES / 2).toString())
-						}
-						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-red-100 border-red-400 text-red-600 font-medium"
-					>
-						<span className="text-[6px]">subtrair meia diária</span>
-						-4h 20m
-					</button>
-					<button
-						tabIndex={-1}
-						type="button"
-						onClick={() =>
-							setCustomAmount((DAILY_WORKING_HOURS_IN_MINUTES / 2).toString())
-						}
-						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
-					>
-						<span className="text-[6px]">somar meia diária</span>
-						+4h 20m
-					</button>
-					<button
-						tabIndex={-1}
-						type="button"
-						onClick={() =>
-							setCustomAmount(DAILY_WORKING_HOURS_IN_MINUTES.toString())
-						}
-						className="flex flex-col hover:cursor-pointer rounded-full p-2 border bg-green-100 border-green-400 text-green-600 font-medium"
-					>
-						<span className="text-[6px]">somar diária</span>
-						+8h 40m
-					</button>
+				<div className="grid grid-cols-5 gap-1">
+					<MinutePresetButton
+						name="Subtraír Diária"
+						value={-DAILY_WORKING_HOURS_IN_MINUTES}
+						setCustomAmount={setCustomAmount}
+					/>
+					<MinutePresetButton
+						name="Subtraír Meia Diária"
+						value={-DAILY_WORKING_HOURS_IN_MINUTES / 2}
+						setCustomAmount={setCustomAmount}
+					/>
+
+					<MinutePresetButton
+						name="Zerar"
+						value={-currentAmount}
+						setCustomAmount={setCustomAmount}
+					/>
+
+					<MinutePresetButton
+						name="Adicionar Meia Diária"
+						value={DAILY_WORKING_HOURS_IN_MINUTES / 2}
+						setCustomAmount={setCustomAmount}
+					/>
+					<MinutePresetButton
+						name="Adicionar Diária"
+						value={DAILY_WORKING_HOURS_IN_MINUTES}
+						setCustomAmount={setCustomAmount}
+					/>
 				</div>
 
 				<Input
-					title="Motivo (ex. Hora extra, sábado, manhã)"
+					title="Motivo da alteração"
+					placeholder="ATRASO SÁB MANHÃ"
 					type="text"
 					value={reason}
 					className="w-full"
@@ -137,5 +123,32 @@ export default function CustomValueDialog({
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
+	);
+}
+
+function MinutePresetButton(props: {
+	name: string;
+	value: number;
+	setCustomAmount: SS<string>;
+}) {
+	const sign = whichSign(props.value);
+
+	return (
+		<button
+			tabIndex={-1}
+			type="button"
+			onClick={() => props.setCustomAmount(props.value.toString())}
+			className={tw(
+				"flex flex-col hover:cursor-pointer rounded p-2",
+				[
+					"bg-red-50 text-red-800",
+					"bg-gray-50 text-gray-800",
+					"bg-green-50 text-green-800",
+				][sign],
+			)}
+		>
+			<span className="text-[8px]">{props.name}</span>
+			<p className="mt-auto font-bold">{props.value}</p>
+		</button>
 	);
 }
