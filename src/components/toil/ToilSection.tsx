@@ -32,6 +32,7 @@ function NewToilUserButton(props: { addToilUser: (u: ToilUser) => void }) {
 				//
 				defaultName=""
 				defaultAvatar="initials"
+				// When creating a new user, the default salary is R$ 1000,00
 				defaultSalary={1000}
 				//
 				onSave={(infos) =>
