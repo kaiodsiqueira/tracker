@@ -1,4 +1,10 @@
-import { Clock, EllipsisVertical, Pencil, Trash } from "lucide-react";
+import {
+	CircleDollarSign,
+	Clock,
+	EllipsisVertical,
+	Pencil,
+	Trash,
+} from "lucide-react";
 import { useState } from "react";
 import {
 	DropdownMenu,
@@ -34,6 +40,7 @@ function getEquivalentHoursValueMessageFor(user: ToilUser) {
 
 	return (
 		<ColoredNumberAnwser question="Equivale a: " sign={whichSign(user.amount)}>
+			<CircleDollarSign size={10} />
 			{BRL(wagePerMinute * user.amount)}
 		</ColoredNumberAnwser>
 	);

@@ -13,7 +13,7 @@ function ReminderSection() {
 	const { reminders, addReminder, removeReminder } = useReminders();
 
 	return (
-		<div className="p-4 border border-black/20 shadow-lg rounded">
+		<div className="p-4 bg-neutral-50 border border-black/20 shadow-lg rounded">
 			<div className="flex justify-between gap-2">
 				<div>
 					<Title>Lembrete de eventos</Title>
@@ -33,13 +33,13 @@ function ReminderSection() {
 
 function App() {
 	return (
-		<main className="flex flex-col gap-4 px-1 sm:px-10 py-5">
+		<main className="bg-neutral-100 flex flex-col gap-4 px-1 sm:px-10 py-5">
 			<ReminderSection />
 			<RentSection />
 			<ToilSection />
 			<BackupSection />
 
-			<footer className="w-full border-t px-20 py-5 flex justify-center text-[8px]">
+			<footer className="w-full border-t px-20 py-5 flex justify-center text-[5px]">
 				<p className="opacity-50">
 					Sistema feito por <b>@kaiodsiqueira</b> para <b>@nildo_celular_</b>
 				</p>

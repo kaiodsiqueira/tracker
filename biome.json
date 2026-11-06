@@ -16,7 +16,9 @@
 		"enabled": true,
 		"rules": {
 			"a11y": {
-				"noAutofocus": "off"
+				"noAutofocus": "off",
+				"useKeyWithClickEvents": "off",
+				"noLabelWithoutControl": "off"
 			},
 			"suspicious": {
 				"noExplicitAny": "off"

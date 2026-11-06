@@ -53,7 +53,7 @@ export default function ToilSection() {
 	const superToil = useToil();
 
 	return (
-		<div className="p-4 border border-black/20 shadow-lg rounded">
+		<div className="p-4 bg-neutral-50 border border-black/20 shadow-lg rounded">
 			<div className="flex justify-between gap-2">
 				<div>
 					<Title>Banco de horas</Title>

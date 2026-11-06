@@ -38,7 +38,7 @@ export default function RentSection() {
 	const nRestante = nPreco - nEntradaTotal;
 
 	return (
-		<section className="border border-black/20 shadow-lg rounded">
+		<section className="border bg-neutral-50 border-black/20 shadow-lg rounded">
 			<header className="p-4 text-white flex justify-between gap-2 bg-slate-800">
 				<div className="flex gap-2 items-center">
 					<Calculator size={30} />
@@ -50,13 +50,15 @@ export default function RentSection() {
 					</div>
 				</div>
 
-				<div
+				<button
+					type="button"
+					onClick={() => setShowDetails(!showDetails)}
 					title="Mostrar mais detalhes sobre o cálculo dos valores"
-					className="bg-slate-700 text-sm rounded px-3 flex gap-2 items-center"
+					className="bg-slate-700 select-none text-sm rounded px-3 flex gap-2 items-center"
 				>
-					<Checkbox checked={showDetails} onCheckedChange={setShowDetails} />
+					<Checkbox checked={showDetails} />
 					<span>Detalhes</span>
-				</div>
+				</button>
 			</header>
 
 			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -91,7 +93,7 @@ export default function RentSection() {
 							return (
 								<li
 									key={options.installments}
-									className="bg-white py-2 flex flex-col"
+									className="bg-neutral-50 py-2 flex flex-col"
 								>
 									<p>
 										<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>

@@ -13,16 +13,14 @@ export function ColoredNumberAnwser(
 	props: PropsWithChildren & { question?: string; sign: number },
 ) {
 	return (
-		<p className={tw("text-xs leading-relaxed")}>
+		<p
+			className={tw(
+				"flex items-center gap-1 text-[10px] leading-relaxed",
+				["text-red-800", "text-black/25", "text-green-800"][props.sign],
+			)}
+		>
 			{props.question}
-			<span
-				className={tw(
-					"text-xs",
-					["text-red-800", "text-black/25", "text-green-800"][props.sign],
-				)}
-			>
-				{props.children}
-			</span>
+			{props.children}
 		</p>
 	);
 }
