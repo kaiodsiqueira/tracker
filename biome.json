@@ -18,7 +18,8 @@
 			"a11y": {
 				"noAutofocus": "off",
 				"useKeyWithClickEvents": "off",
-				"noLabelWithoutControl": "off"
+				"noLabelWithoutControl": "off",
+				"useSemanticElements": "off"
 			},
 			"suspicious": {
 				"noExplicitAny": "off"

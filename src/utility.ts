@@ -7,6 +7,7 @@ import {
 	formatDuration,
 	intervalToDuration,
 } from "date-fns";
+
 import { ptBR } from "date-fns/locale";
 
 // Returns 0 if n is negative, 1 if n is 0 or 2 if n is positive

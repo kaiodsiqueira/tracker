@@ -1,31 +1,80 @@
 import { CreditCard, Info } from "lucide-react";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Combobox,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxList,
+} from "@/components/ui/combobox";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
+import type { LiProps } from "@/types";
 import { BRL } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
-const INSTALLMENTS = [
-	{ installments: 1, interest: 0.03061 },
-	{ installments: 2, interest: 0.04778 },
-	{ installments: 3, interest: 0.05552 },
-	{ installments: 4, interest: 0.06338 },
-	{ installments: 5, interest: 0.07113 },
-	{ installments: 6, interest: 0.07911 },
-	{ installments: 7, interest: 0.0 },
-	{ installments: 8, interest: 0.09554 },
-	{ installments: 9, interest: 0.10351 },
-	{ installments: 10, interest: 0.11161 },
-	{ installments: 11, interest: 0.1197 },
-	{ installments: 12, interest: 0.12791 },
+const gateways = [
+	{
+		name: "Mastercard/Visa",
+		fees: {
+			debit: 0.0145,
+			credit: [
+				{ installments: 1, interest: 0.03061 },
+				{ installments: 2, interest: 0.04778 },
+				{ installments: 3, interest: 0.05552 },
+				{ installments: 4, interest: 0.06338 },
+				{ installments: 5, interest: 0.07113 },
+				{ installments: 6, interest: 0.07911 },
+				{ installments: 7, interest: 0.08755 },
+				{ installments: 8, interest: 0.09554 },
+				{ installments: 9, interest: 0.10351 },
+				{ installments: 10, interest: 0.11161 },
+				{ installments: 11, interest: 0.1197 },
+				{ installments: 12, interest: 0.12791 },
+
+				{ installments: 15, interest: 0.15248 },
+				{ installments: 18, interest: 0.17759 },
+			],
+		},
+	},
+	{
+		name: "Elo",
+		fees: {
+			debit: 0.0151,
+			credit: [
+				{ installments: 1, interest: 0.03413 },
+				{ installments: 2, interest: 0.04943 },
+				{ installments: 3, interest: 0.0572 },
+				{ installments: 4, interest: 0.06508 },
+				{ installments: 5, interest: 0.07285 },
+				{ installments: 6, interest: 0.08085 },
+				{ installments: 7, interest: 0.08992 },
+				{ installments: 8, interest: 0.09794 },
+				{ installments: 9, interest: 0.10596 },
+				{ installments: 10, interest: 0.11409 },
+				{ installments: 11, interest: 0.12221 },
+				{ installments: 12, interest: 0.13046 },
+				{ installments: 15, interest: 0.15513 },
+				{ installments: 18, interest: 0.18037 },
+			],
+		},
+	},
 ];
 
 export default function FeesSimulatorSection() {
 	const [showDetails, setShowDetails] = useState(false);
+	const [gateway, setGateway] = useState("Mastercard/Visa");
 
 	const [price, setPrice] = useState(MaskBRL(100000));
 	const nPreco = UnmaskBRL(price);
+
+	const selectedGateway = gateways.find((x) => x.name === gateway);
+	if (!selectedGateway) return "Gateway not found";
+
+	const nJurosNoDebito = nPreco * selectedGateway.fees.debit;
+	const nTotalNoDebito = nPreco + nJurosNoDebito;
 
 	return (
 		<section className="border bg-neutral-50 border-black/20 shadow-lg rounded">
@@ -33,9 +82,10 @@ export default function FeesSimulatorSection() {
 				<div className="flex gap-2 items-center">
 					<CreditCard size={30} />
 					<div>
-						<Title>Simular Juros no Cartão de crédito</Title>
+						<Title>Simular Juros no Cartão</Title>
 						<p className="text-xs">
-							Ferramenta rápida para simular valores no cartão de crédito.
+							Ferramenta rápida para simular valores no cartão de crédito ou
+							débito.
 						</p>
 					</div>
 				</div>
@@ -56,7 +106,7 @@ export default function FeesSimulatorSection() {
 				<div className="col-span-2 p-4 rounded border bg-neutral-100">
 					<div className="flex flex-wrap gap-4 items-center">
 						<h1 className="px-2 py-1 text-sm font-medium w-fit rounded-md bg-emerald-900 text-neutral-100 flex items-center gap-1">
-							<Info size={12} /> Simulação no cartão de crédito
+							<Info size={12} /> Simulação no cartão
 						</h1>
 
 						<div>
@@ -65,17 +115,28 @@ export default function FeesSimulatorSection() {
 					</div>
 
 					<ul className="kerning-none bg-neutral-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px mt-4">
-						{INSTALLMENTS.map((options) => {
+						<PriceTile>
+							<b>Débito</b>
+
+							{showDetails ? (
+								<div>
+									Valor (<b>{BRL(nPreco)}</b>) + Juros (
+									<b>{BRL(nJurosNoDebito)}</b>) = Total (
+									<b>{BRL(nTotalNoDebito)}</b>)
+								</div>
+							) : (
+								<div>{BRL(nTotalNoDebito)}</div>
+							)}
+						</PriceTile>
+
+						{selectedGateway.fees.credit.map((options) => {
 							const juros = nPreco * options.interest;
 							const total = nPreco + juros;
 
 							const parcelas = total / options.installments;
 
 							return (
-								<li
-									key={options.installments}
-									className="bg-neutral-100 px-4 py-2 flex flex-col"
-								>
+								<PriceTile key={options.installments}>
 									<p>
 										<i>
 											<b>{options.installments}x</b>
@@ -91,7 +152,7 @@ export default function FeesSimulatorSection() {
 									) : (
 										<div>{BRL(total)}</div>
 									)}
-								</li>
+								</PriceTile>
 							);
 						})}
 					</ul>
@@ -114,13 +175,37 @@ export default function FeesSimulatorSection() {
 						onChange={(e) => setPrice(MaskBRL(e.target.value))}
 					/>
 
+					<div className="flex flex-col">
+						<span className="font-medium text-xs">Bandeira</span>
+						<Combobox
+							value={gateway}
+							items={gateways}
+							onValueChange={(e) => setGateway(e || "Mastercard/Visa")}
+						>
+							<ComboboxInput placeholder="Selecione uma bandeira" />
+							<ComboboxContent>
+								<ComboboxEmpty>No items found.</ComboboxEmpty>
+								<ComboboxList>
+									{(item) => (
+										<ComboboxItem key={item.name} value={item.name}>
+											{item.name}
+										</ComboboxItem>
+									)}
+								</ComboboxList>
+							</ComboboxContent>
+						</Combobox>
+					</div>
+
 					<h1 className="mt-4 text-2xl font-bold">Sobre</h1>
-					<p>
-						¹ Ainda não disponível simular a taxa no débito. ² Apenas as taxas
-						da bandeira Mastercard e Visa está disponível no momento.
-					</p>
+					<p>Nenhuma nota adicionada.</p>
 				</div>
 			</div>
 		</section>
+	);
+}
+
+function PriceTile(props: LiProps) {
+	return (
+		<li className="bg-neutral-100 px-4 py-2 flex flex-col">{props.children}</li>
 	);
 }
