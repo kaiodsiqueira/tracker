@@ -21,12 +21,16 @@ export const DAILY_WORKING_HOURS_IN_MINUTES = 520; // 8h 40m
 export default function CustomValueDialog({
 	isOpen,
 	setIsOpen,
+	modalTitle,
 	currentAmount,
 	modifyPersistentAmount,
 }: {
 	isOpen: boolean;
-	currentAmount: number;
 	setIsOpen: SS<boolean>;
+	//
+	currentAmount: number;
+	modalTitle: string;
+	//
 	modifyPersistentAmount: (a: number, reason: string) => void;
 }) {
 	const [customAmount, setCustomAmount] = useState("");
@@ -54,10 +58,10 @@ export default function CustomValueDialog({
 		<Dialog open={isOpen} onOpenChange={(o) => setIsOpen(o)}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Digite um valor personalizado</DialogTitle>
-					<DialogDescription className="text-xs">
-						Em minutos, use números negativos para subtrair ou positivo para
-						somar ao saldo atual no banco
+					<DialogTitle>{modalTitle}</DialogTitle>
+					<DialogDescription className="mb-2 text-[10px] text-black/80">
+						Utilize minutos positivo para somar ou negativo para subtrair do
+						valor atual ({minutesToDuration(currentAmount)}).
 					</DialogDescription>
 				</DialogHeader>
 

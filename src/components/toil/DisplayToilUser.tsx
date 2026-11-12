@@ -171,8 +171,11 @@ export default function DisplayToilUser(props: {
 
 			<CustomValueDialog
 				isOpen={isCustomValueDrawerOpen}
-				currentAmount={props.user.amount}
 				setIsOpen={setIsCustomValueDrawerOpen}
+				//
+				modalTitle={`Editando as horas de ${props.user.name}`}
+				currentAmount={props.user.amount}
+				//
 				modifyPersistentAmount={props.superToil.addAmount.bind(
 					null,
 					props.index,

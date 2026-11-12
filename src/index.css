@@ -132,3 +132,7 @@
 body {
 	position: relative;
 }
+
+@utility kerning-none {
+	font-kerning: none;
+}

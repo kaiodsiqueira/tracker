@@ -85,7 +85,7 @@ export default function RentSection() {
 						)}
 					</div>
 
-					<ul className="bg-neutral-200 grid grid-cols-1 sm:grid-cols-2 justify-between gap-px mt-4">
+					<ul className="kerning-none bg-neutral-200 grid grid-cols-1 sm:grid-cols-2 justify-between gap-px mt-4">
 						{INSTALLMENTS.map((options) => {
 							const juros = nRestante * options.interestMultiplier;
 

@@ -24,7 +24,7 @@ const INSTALLMENTS = [
 export default function FeesSimulatorSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
-	const [price, setPrice] = useState(MaskBRL(235000));
+	const [price, setPrice] = useState(MaskBRL(100000));
 	const nPreco = UnmaskBRL(price);
 
 	return (
@@ -54,7 +54,7 @@ export default function FeesSimulatorSection() {
 			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* SIMULATION SECTION DIV */}
 				<div className="col-span-2 p-4 rounded border bg-neutral-100">
-					<div className="flex gap-4 items-center">
+					<div className="flex flex-wrap gap-4 items-center">
 						<h1 className="px-2 py-1 text-sm font-medium w-fit rounded-md bg-emerald-900 text-neutral-100 flex items-center gap-1">
 							<Info size={12} /> Simulação no cartão de crédito
 						</h1>
@@ -64,7 +64,7 @@ export default function FeesSimulatorSection() {
 						</div>
 					</div>
 
-					<ul className="bg-neutral-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px mt-4">
+					<ul className="kerning-none bg-neutral-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px mt-4">
 						{INSTALLMENTS.map((options) => {
 							const juros = nPreco * options.interest;
 							const total = nPreco + juros;

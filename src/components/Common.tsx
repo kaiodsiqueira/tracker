@@ -15,7 +15,7 @@ export function ColoredNumberAnwser(
 	return (
 		<p
 			className={tw(
-				"flex items-center gap-1 text-[10px] leading-relaxed",
+				"flex items-center gap-1 text-[12px] leading-relaxed",
 				["text-red-800", "text-black/25", "text-green-800"][props.sign],
 			)}
 		>
