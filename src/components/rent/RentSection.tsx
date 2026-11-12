@@ -1,4 +1,4 @@
-import { Calculator } from "lucide-react";
+import { Calculator, Info } from "lucide-react";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
@@ -63,7 +63,11 @@ export default function RentSection() {
 
 			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				{/* SIMULATION SECTION DIV */}
-				<div className="p-4 rounded border bg-black/1">
+				<div className="p-4 rounded border bg-neutral-100">
+					<h1 className="mb-4 px-2 py-1 text-sm font-medium w-fit rounded-md bg-slate-800 text-neutral-100 flex items-center gap-1">
+						<Info size={12} /> Simulação na modalidade de aluguel
+					</h1>
+
 					<div>
 						Valor à vista: <b>{BRL(nPreco)}</b>
 						<br />
@@ -81,7 +85,7 @@ export default function RentSection() {
 						)}
 					</div>
 
-					<ul className="bg-black/10 flex flex-col justify-between gap-px mt-4">
+					<ul className="bg-neutral-200 grid grid-cols-1 sm:grid-cols-2 justify-between gap-px mt-4">
 						{INSTALLMENTS.map((options) => {
 							const juros = nRestante * options.interestMultiplier;
 
@@ -93,10 +97,13 @@ export default function RentSection() {
 							return (
 								<li
 									key={options.installments}
-									className="bg-neutral-50 py-2 flex flex-col"
+									className="bg-neutral-100 px-4 py-2 flex flex-col"
 								>
 									<p>
-										<i>{options.installments}x</i> de <b>{BRL(parcelas)}</b>
+										<b>
+											<i>{options.installments}x</i>
+										</b>{" "}
+										de <b>{BRL(parcelas)}</b>
 									</p>
 
 									{showDetails ? (
@@ -145,9 +152,8 @@ export default function RentSection() {
 
 					<h1 className="mt-4 text-2xl font-bold">Sobre</h1>
 					<p>
-						A simulação mostra as parcelas mensais, porém, parcelamento
-						quinzenal ou semanal também estão disponíveis via divisão dos mesmos
-						valores.
+						¹ Pagamento quinzenal também disponível. ² A entrada também pode ser
+						parcelada no cartão de crédito.
 					</p>
 				</div>
 			</div>
