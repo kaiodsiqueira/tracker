@@ -1,8 +1,14 @@
 import { Calculator, Info } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useDebounce } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
-import { BRL } from "@/utility";
+import {
+	BRL,
+	getPersistentStorage,
+	type SS,
+	setPersistentStorage,
+} from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
@@ -18,6 +24,21 @@ const INSTALLMENTS = [
 	{ installments: 8, interestMultiplier: 1.2 },
 	{ installments: 10, interestMultiplier: 1.2 },
 ];
+
+function useSimulatedHistory(): [string[], SS<string[]>] {
+	const [simulatedValuesHistory, setSimulatedValuesHistory] = useState<
+		string[]
+	>(getPersistentStorage("history-rent-simulated-values") || []);
+
+	useEffect(() => {
+		setPersistentStorage(
+			"history-rent-simulated-values",
+			simulatedValuesHistory,
+		);
+	}, [simulatedValuesHistory]);
+
+	return [simulatedValuesHistory, setSimulatedValuesHistory];
+}
 
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
@@ -36,6 +57,18 @@ export default function RentSection() {
 		nEntradaTotal - Math.min(nCreditoDeTroca, nEntradaTotal);
 
 	const nRestante = nPreco - nEntradaTotal;
+
+	// history section
+
+	const [simulatedValuesHistory, setSimulatedValuesHistory] =
+		useSimulatedHistory();
+
+	const updateHistory = useDebounce((newPrice: string) => {
+		setSimulatedValuesHistory(
+			// add new into beggining, limit to 5
+			[newPrice, ...simulatedValuesHistory].slice(0, 5),
+		);
+	}, 5000);
 
 	return (
 		<section className="border bg-neutral-50 border-black/20 shadow-lg rounded">
@@ -135,8 +168,24 @@ export default function RentSection() {
 						className="w-auto"
 						title="Valor do aparelho (à vista)"
 						value={price}
-						onChange={(e) => setPrice(MaskBRL(e.target.value))}
+						onChange={(e) => {
+							const masked = MaskBRL(e.target.value);
+							updateHistory(masked);
+							setPrice(masked);
+						}}
 					/>
+					<div className="flex gap-1">
+						{simulatedValuesHistory.map((value) => (
+							<button
+								key={value}
+								type="button"
+								onClick={() => setPrice(value)}
+								className="cursor-pointer px-2 py-1 text-xs border border-slate-900 rounded-full bg-slate-50 text-slate-900"
+							>
+								{value}
+							</button>
+						))}
+					</div>
 
 					<Input
 						className="w-auto"

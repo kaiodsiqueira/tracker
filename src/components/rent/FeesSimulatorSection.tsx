@@ -1,5 +1,5 @@
 import { CreditCard, Info } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Combobox,
@@ -9,9 +9,15 @@ import {
 	ComboboxItem,
 	ComboboxList,
 } from "@/components/ui/combobox";
+import { useDebounce } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
 import type { LiProps } from "@/types";
-import { BRL } from "@/utility";
+import {
+	BRL,
+	getPersistentStorage,
+	type SS,
+	setPersistentStorage,
+} from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
@@ -63,12 +69,37 @@ const gateways = [
 	},
 ];
 
+function useSimulatedHistory(): [string[], SS<string[]>] {
+	const [simulatedValuesHistory, setSimulatedValuesHistory] = useState<
+		string[]
+	>(getPersistentStorage("history-card-simulated-values") || []);
+
+	useEffect(() => {
+		setPersistentStorage(
+			"history-card-simulated-values",
+			simulatedValuesHistory,
+		);
+	}, [simulatedValuesHistory]);
+
+	return [simulatedValuesHistory, setSimulatedValuesHistory];
+}
+
 export default function FeesSimulatorSection() {
 	const [showDetails, setShowDetails] = useState(false);
 	const [gateway, setGateway] = useState("Mastercard/Visa");
 
 	const [price, setPrice] = useState(MaskBRL(100000));
 	const nPreco = UnmaskBRL(price);
+
+	const [simulatedValuesHistory, setSimulatedValuesHistory] =
+		useSimulatedHistory();
+
+	const updateHistory = useDebounce((newPrice: string) => {
+		setSimulatedValuesHistory(
+			// add new into beggining, limit to 5
+			[newPrice, ...simulatedValuesHistory].slice(0, 5),
+		);
+	}, 5000);
 
 	const selectedGateway = gateways.find((x) => x.name === gateway);
 	if (!selectedGateway) return "Gateway not found";
@@ -172,8 +203,25 @@ export default function FeesSimulatorSection() {
 						className="w-auto"
 						title="Valor (em R$)"
 						value={price}
-						onChange={(e) => setPrice(MaskBRL(e.target.value))}
+						onChange={(e) => {
+							const masked = MaskBRL(e.target.value);
+							// kind of treating the str
+							updateHistory(masked);
+							setPrice(masked);
+						}}
 					/>
+					<div className="flex gap-1">
+						{simulatedValuesHistory.map((value) => (
+							<button
+								key={value}
+								type="button"
+								onClick={() => setPrice(value)}
+								className="cursor-pointer px-2 py-1 text-xs border border-emerald-900 rounded-full bg-emerald-50 text-emerald-900"
+							>
+								{value}
+							</button>
+						))}
+					</div>
 
 					<div className="flex flex-col">
 						<span className="font-medium text-xs">Bandeira</span>

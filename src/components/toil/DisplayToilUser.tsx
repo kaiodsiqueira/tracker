@@ -181,7 +181,7 @@ export default function DisplayToilUser(props: {
 
 				{props.user.metrics && (
 					<div className="mt-2">
-						<div className="bg-red-700 h-1">
+						<div className="rounded-full overflow-hidden bg-red-700 h-1">
 							<div
 								style={{
 									width: `${(props.user.metrics.totalPositiveLogs / totalLogsCount) * 100}%`,
