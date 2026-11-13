@@ -13,7 +13,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { MaskMinutes, UnmaskMinutes } from "@/lib/masks";
-import { minutesToDuration, type SS, sign, tw, whichSign } from "@/utility";
+import { minutesToDuration, type SS, tw, whichSign } from "@/utility";
 
 export const MONTHLY_WORKING_DAYS = 24; // Dias trabalhados por mês
 export const DAILY_WORKING_HOURS_IN_MINUTES = 520; // 8h 40m
@@ -23,7 +23,7 @@ export default function CustomValueDialog({
 	setIsOpen,
 	modalTitle,
 	currentAmount,
-	modifyPersistentAmount,
+	onSubmit,
 }: {
 	isOpen: boolean;
 	setIsOpen: SS<boolean>;
@@ -31,7 +31,7 @@ export default function CustomValueDialog({
 	currentAmount: number;
 	modalTitle: string;
 	//
-	modifyPersistentAmount: (a: number, reason: string) => void;
+	onSubmit: (customAmount: number, reason: string) => void;
 }) {
 	const [customAmount, setCustomAmount] = useState("");
 	const [reason, setReason] = useState("");
@@ -42,11 +42,10 @@ export default function CustomValueDialog({
 		if (amount === 0) return;
 		if (reason.trim().length === 0) return;
 
-		modifyPersistentAmount(
-			amount,
-			`${sign(amount)} ${minutesToDuration(Math.abs(amount))}: ${reason}`,
-		);
+		// report back the user input infos
+		onSubmit(amount, reason);
 
+		// reset states
 		setCustomAmount("");
 		setReason("");
 		setIsOpen(false);

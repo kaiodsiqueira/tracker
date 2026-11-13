@@ -15,7 +15,7 @@ export function whichSign(n: number): number {
 	return n < 0 ? 0 : n === 0 ? 1 : 2;
 }
 
-export function sign(value: number): string {
+export function StrSign(value: number): "-" | "" | "+" {
 	return value < 0 ? "-" : value === 0 ? "" : "+";
 }
 

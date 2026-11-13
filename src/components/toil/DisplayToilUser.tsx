@@ -71,6 +71,10 @@ export default function DisplayToilUser(props: {
 
 	const hoursEquivalent = getEquivalentHoursValueMessageFor(props.user);
 
+	const totalLogsCount =
+		(props.user.metrics?.totalNegativeLogs || 0) +
+		(props.user.metrics?.totalPositiveLogs || 0);
+
 	return (
 		<div className="border border-slate-800/20 rounded-lg p-3">
 			<div>
@@ -147,20 +151,54 @@ export default function DisplayToilUser(props: {
 
 				<ul className="flex flex-col px-2 py-1 bg-black/2 border rounded mt-4 text-xs">
 					{props.user.logs?.length ? (
-						props.user.logs.map((l) => (
-							<li
-								key={l}
-								className={
-									l.startsWith("+") ? "text-green-800" : "text-red-800"
-								}
-							>
-								{l}
-							</li>
-						))
+						props.user.logs.map((log) => {
+							if (typeof log === "string")
+								return (
+									<li
+										title="Este log usa uma versão antiga e não pode ser categorizado!"
+										key={log}
+									>
+										{log}
+									</li>
+								);
+
+							return (
+								<li
+									key={log.reason}
+									className={
+										log.sign === "+" ? "text-green-800" : "text-red-800"
+									}
+								>
+									{log.sign} {minutesToDuration(Math.abs(log.amount))}:{" "}
+									{log.reason}
+								</li>
+							);
+						})
 					) : (
 						<span className="opacity-40">Nenhum registro ainda</span>
 					)}
 				</ul>
+
+				{props.user.metrics && (
+					<div className="mt-2">
+						<div className="bg-red-700 h-1">
+							<div
+								style={{
+									width: `${(props.user.metrics.totalPositiveLogs / totalLogsCount) * 100}%`,
+								}}
+								className="bg-emerald-700 border-r-2 border-white h-full transition duration-200"
+							></div>
+						</div>
+						<div className="mt-1 text-[10px] flex justify-between">
+							<p className="text-emerald-900">
+								Extras: {props.user.metrics.totalPositiveLogs}
+							</p>
+							<p className="text-red-900">
+								Atrasos/Faltas: {props.user.metrics.totalNegativeLogs}
+							</p>
+						</div>
+					</div>
+				)}
 
 				{props.user.salary && (
 					<p className="text-[8px] opacity-25 mt-2">
@@ -176,10 +214,9 @@ export default function DisplayToilUser(props: {
 				modalTitle={`Editando as horas de ${props.user.name}`}
 				currentAmount={props.user.amount}
 				//
-				modifyPersistentAmount={props.superToil.addAmount.bind(
-					null,
-					props.index,
-				)}
+				onSubmit={(typedAmount, reason) => {
+					props.superToil.addAmount(props.index, typedAmount, reason);
+				}}
 			/>
 
 			<ConfirmDialog

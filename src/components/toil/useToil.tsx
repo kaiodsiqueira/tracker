@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
-import { getPersistentStorage } from "@/utility";
+import { getPersistentStorage, StrSign } from "@/utility";
+
+type ToilUserLog = {
+	sign: ReturnType<typeof StrSign>;
+	amount: number;
+	reason: string;
+};
 
 export type ToilUser = {
 	name: string;
 	avatar: string;
 	amount: number;
 	salary?: number;
-	logs: string[];
+	logs?: (string | ToilUserLog)[];
+	metrics?: { totalNegativeLogs: number; totalPositiveLogs: number };
 };
 
 export function useToil() {
@@ -19,17 +26,28 @@ export function useToil() {
 	}, [users]);
 
 	function addAmount(index: number, amount: number, reason: string) {
-		setUsers(
-			users.map((u, i) =>
-				i === index
-					? {
-							...u,
-							amount: u.amount + amount,
-							logs: [reason, ...(u.logs ?? []).slice(0, 4)],
-						}
-					: u,
-			),
-		);
+		// modify the amount
+		users[index].amount += amount;
+		users[index].logs = [
+			// insert new log at the beginning
+			{ sign: StrSign(amount), amount, reason },
+			// keep only the last 5 logs
+			...(users[index].logs ?? []).slice(0, 4),
+		];
+
+		// update related metrics
+
+		if (!users[index].metrics) {
+			// default metrics if not present
+			users[index].metrics = { totalNegativeLogs: 0, totalPositiveLogs: 0 };
+		}
+
+		users[index].metrics[
+			amount < 0 ? "totalNegativeLogs" : "totalPositiveLogs"
+		]++;
+
+		// update the state with a new copy of the users array to trigger a re-render
+		setUsers([...users]);
 	}
 
 	return {
