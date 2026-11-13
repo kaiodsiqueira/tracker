@@ -1,103 +1,34 @@
 import { CreditCard, Info } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-	Combobox,
-	ComboboxContent,
-	ComboboxEmpty,
-	ComboboxInput,
-	ComboboxItem,
-	ComboboxList,
-} from "@/components/ui/combobox";
-import { useDebounce } from "@/hooks";
+
+import { useDebounce, useValuesHistory } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
 import type { LiProps } from "@/types";
-import {
-	BRL,
-	getPersistentStorage,
-	type SS,
-	setPersistentStorage,
-} from "@/utility";
+import { BRL } from "@/utility";
 import { Input } from "../Common";
+import SimpleSelect from "../commons/SimpleSelect";
 import { Title } from "../StaticComponents";
+import gateways from "./fees";
 
-const gateways = [
-	{
-		name: "Mastercard/Visa",
-		fees: {
-			debit: 0.0145,
-			credit: [
-				{ installments: 1, interest: 0.03317 },
-				{ installments: 2, interest: 0.05297 },
-				{ installments: 3, interest: 0.06034 },
-				{ installments: 4, interest: 0.06770 },
-				{ installments: 5, interest: 0.07516 },
-				{ installments: 6, interest: 0.08273 },
-				{ installments: 7, interest: 0.09674 },
-				{ installments: 8, interest: 0.10437 },
-				{ installments: 9, interest: 0.11211 },
-				{ installments: 10, interest: 0.11983 },
-				{ installments: 11, interest: 0.12765},
-				{ installments: 12, interest: 0.13547},
-
-				{ installments: 15, interest: 0.15902},
-				{ installments: 18, interest: 0.18302 },
-			],
-		},
-	},
-	{
-		name: "Demais Bandeiras",
-		fees: {
-			debit: 0.0151,
-			credit: [
-				{ installments: 1, interest: 0.03627 },
-				{ installments: 2, interest: 0.05463 },
-				{ installments: 3, interest: 0.06203 },
-				{ installments: 4, interest: 0.06941 },
-				{ installments: 5, interest: 0.07689 },
-				{ installments: 6, interest: 0.08449 },
-				{ installments: 7, interest: 0.10035 },
-				{ installments: 8, interest: 0.10804 },
-				{ installments: 9, interest: 0.11583 },
-				{ installments: 10, interest: 0.12360 },
-				{ installments: 11, interest: 0.13148 },
-				{ installments: 12, interest: 0.13935 },
-				{ installments: 15, interest: 0.16306 },
-				{ installments: 18, interest: 0.18722 },
-			],
-		},
-	},
-];
-
-function useSimulatedHistory(): [string[], SS<string[]>] {
-	const [simulatedValuesHistory, setSimulatedValuesHistory] = useState<
-		string[]
-	>(getPersistentStorage("history-card-simulated-values") || []);
-
-	useEffect(() => {
-		setPersistentStorage(
-			"history-card-simulated-values",
-			simulatedValuesHistory,
-		);
-	}, [simulatedValuesHistory]);
-
-	return [simulatedValuesHistory, setSimulatedValuesHistory];
-}
-
-export default function FeesSimulatorSection() {
+export default function CardSimulatorSection() {
 	const [showDetails, setShowDetails] = useState(false);
 	const [gateway, setGateway] = useState("Mastercard/Visa");
 
 	const [price, setPrice] = useState(MaskBRL(100000));
 	const nPreco = UnmaskBRL(price);
 
-	const [simulatedValuesHistory, setSimulatedValuesHistory] =
-		useSimulatedHistory();
+	const [valuesHistory, setValuesHistory] = useValuesHistory(
+		"history-card-simulated-values",
+	);
 
 	const updateHistory = useDebounce((newPrice: string) => {
-		setSimulatedValuesHistory(
+		// Preventing adding duplicated values in history
+		if (valuesHistory.find((x) => x === newPrice)) return;
+
+		setValuesHistory(
 			// add new into beggining, limit to 5
-			[newPrice, ...simulatedValuesHistory].slice(0, 5),
+			[newPrice, ...valuesHistory].slice(0, 5),
 		);
 	}, 5000);
 
@@ -211,12 +142,12 @@ export default function FeesSimulatorSection() {
 						}}
 					/>
 					<div className="flex flex-wrap gap-x-1 gap-y-2">
-						{simulatedValuesHistory.map((value) => (
+						{valuesHistory.map((value) => (
 							<button
 								key={value}
 								type="button"
 								onClick={() => setPrice(value)}
-								className="cursor-pointer px-2 py-1 text-[10px] border border-emerald-900 rounded-full bg-emerald-50 text-emerald-900"
+								className="cursor-pointer px-2 py-1 text-[10px] border border-emerald-900 rounded-full text-emerald-900 font-semibold"
 							>
 								{value}
 							</button>
@@ -225,23 +156,13 @@ export default function FeesSimulatorSection() {
 
 					<div className="flex flex-col">
 						<span className="font-medium text-xs">Bandeira</span>
-						<Combobox
+
+						<SimpleSelect
 							value={gateway}
-							items={gateways}
-							onValueChange={(e) => setGateway(e || "Mastercard/Visa")}
-						>
-							<ComboboxInput placeholder="Selecione uma bandeira" />
-							<ComboboxContent>
-								<ComboboxEmpty>No items found.</ComboboxEmpty>
-								<ComboboxList>
-									{(item) => (
-										<ComboboxItem key={item.name} value={item.name}>
-											{item.name}
-										</ComboboxItem>
-									)}
-								</ComboboxList>
-							</ComboboxContent>
-						</Combobox>
+							setValue={setGateway}
+							defaultValue="Mastercard/Visa"
+							items={gateways.map((g) => g.name)}
+						/>
 					</div>
 
 					<h1 className="mt-4 text-2xl font-bold">Sobre</h1>

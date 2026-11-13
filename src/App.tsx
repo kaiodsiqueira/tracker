@@ -1,5 +1,5 @@
 import BackupSection from "./components/BackupSection";
-import FeesSimulatorSection from "./components/rent/FeesSimulatorSection";
+import CardSimulatorSection from "./components/card-simulator/Section";
 import RentSection from "./components/rent/RentSection";
 import { Title } from "./components/StaticComponents";
 import ToilSection from "./components/toil/ToilSection";
@@ -37,7 +37,7 @@ function App() {
 		<main className="bg-neutral-100 flex flex-col gap-4 px-1 sm:px-10 py-5">
 			<ReminderSection />
 			<RentSection />
-			<FeesSimulatorSection />
+			<CardSimulatorSection />
 			<ToilSection />
 			<BackupSection />
 

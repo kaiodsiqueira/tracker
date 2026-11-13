@@ -1,4 +1,5 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getPersistentStorage, type SS, setPersistentStorage } from "./utility";
 
 export function useDebounce(fn: any, delay = 400) {
 	const timerRef = useRef<number>(null);
@@ -13,4 +14,18 @@ export function useDebounce(fn: any, delay = 400) {
 		},
 		[fn, delay],
 	);
+}
+
+export function useValuesHistory(
+	localStorageKey: string,
+): [string[], SS<string[]>] {
+	const [history, setHistory] = useState<string[]>(
+		getPersistentStorage(localStorageKey) || [],
+	);
+
+	useEffect(() => {
+		setPersistentStorage(localStorageKey, history);
+	}, [localStorageKey, history]);
+
+	return [history, setHistory];
 }

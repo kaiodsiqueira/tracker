@@ -1,14 +1,9 @@
 import { Calculator, Info } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useDebounce } from "@/hooks";
+import { useDebounce, useValuesHistory } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
-import {
-	BRL,
-	getPersistentStorage,
-	type SS,
-	setPersistentStorage,
-} from "@/utility";
+import { BRL } from "@/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 
@@ -24,21 +19,6 @@ const INSTALLMENTS = [
 	{ installments: 8, interestMultiplier: 1.2 },
 	{ installments: 10, interestMultiplier: 1.2 },
 ];
-
-function useSimulatedHistory(): [string[], SS<string[]>] {
-	const [simulatedValuesHistory, setSimulatedValuesHistory] = useState<
-		string[]
-	>(getPersistentStorage("history-rent-simulated-values") || []);
-
-	useEffect(() => {
-		setPersistentStorage(
-			"history-rent-simulated-values",
-			simulatedValuesHistory,
-		);
-	}, [simulatedValuesHistory]);
-
-	return [simulatedValuesHistory, setSimulatedValuesHistory];
-}
 
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
@@ -60,13 +40,17 @@ export default function RentSection() {
 
 	// history section
 
-	const [simulatedValuesHistory, setSimulatedValuesHistory] =
-		useSimulatedHistory();
+	const [valuesHistory, setValuesHistory] = useValuesHistory(
+		"history-rent-simulated-values",
+	);
 
 	const updateHistory = useDebounce((newPrice: string) => {
-		setSimulatedValuesHistory(
+		// Preventing adding duplicated values in history
+		if (valuesHistory.find((x) => x === newPrice)) return;
+
+		setValuesHistory(
 			// add new into beggining, limit to 5
-			[newPrice, ...simulatedValuesHistory].slice(0, 5),
+			[newPrice, ...valuesHistory].slice(0, 5),
 		);
 	}, 5000);
 
@@ -175,12 +159,12 @@ export default function RentSection() {
 						}}
 					/>
 					<div className="flex flex-wrap gap-x-1 gap-y-2">
-						{simulatedValuesHistory.map((value) => (
+						{valuesHistory.map((value) => (
 							<button
 								key={value}
 								type="button"
 								onClick={() => setPrice(value)}
-								className="cursor-pointer px-2 py-1 text-[10px] border border-slate-900 rounded-full bg-slate-50 text-slate-900"
+								className="cursor-pointer px-2 py-1 text-[10px] border border-slate-900 rounded-full text-slate-900 font-semibold"
 							>
 								{value}
 							</button>
