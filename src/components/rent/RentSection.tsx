@@ -174,13 +174,13 @@ export default function RentSection() {
 							setPrice(masked);
 						}}
 					/>
-					<div className="flex gap-1">
+					<div className="flex flex-wrap gap-x-1 gap-y-2">
 						{simulatedValuesHistory.map((value) => (
 							<button
 								key={value}
 								type="button"
 								onClick={() => setPrice(value)}
-								className="cursor-pointer px-2 py-1 text-xs border border-slate-900 rounded-full bg-slate-50 text-slate-900"
+								className="cursor-pointer px-2 py-1 text-[10px] border border-slate-900 rounded-full bg-slate-50 text-slate-900"
 							>
 								{value}
 							</button>

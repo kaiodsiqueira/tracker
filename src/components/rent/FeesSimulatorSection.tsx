@@ -210,13 +210,13 @@ export default function FeesSimulatorSection() {
 							setPrice(masked);
 						}}
 					/>
-					<div className="flex gap-1">
+					<div className="flex flex-wrap gap-x-1 gap-y-2">
 						{simulatedValuesHistory.map((value) => (
 							<button
 								key={value}
 								type="button"
 								onClick={() => setPrice(value)}
-								className="cursor-pointer px-2 py-1 text-xs border border-emerald-900 rounded-full bg-emerald-50 text-emerald-900"
+								className="cursor-pointer px-2 py-1 text-[10px] border border-emerald-900 rounded-full bg-emerald-50 text-emerald-900"
 							>
 								{value}
 							</button>
