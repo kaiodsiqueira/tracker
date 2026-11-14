@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import BackupSection from "./components/BackupSection";
 import CardSimulatorSection from "./components/card-simulator/Section";
 import RentSection from "./components/rent/RentSection";
@@ -54,8 +54,10 @@ function App() {
 }
 
 import { useReactToPrint } from "react-to-print";
+import { Input } from "./components/ui/input";
 
 function Teste() {
+	const [msg, setMsg] = useState("");
 	const cupomRef = useRef(null);
 
 	const imprimir = useReactToPrint({
@@ -65,30 +67,29 @@ function Teste() {
 
 	return (
 		<div>
+			<Input value={msg} onChange={(e) => setMsg(e.target.value)} />
 			<button type="button" onClick={imprimir}>
 				Imprimir cupom
 			</button>
 
-			<div ref={cupomRef} className="bg-red-50 p-8">
+			<div ref={cupomRef} className="w-[302.36px] border p-4">
 				<center>
-					<h1>
-						<b>DOCUMENTO AUXILIAR DE ENTREGA</b>
+					<hr className="my-2 mt-8" />
+					<h1 className="text-xs">
+						<b>SISTEMAS NILDO CELULARES</b>
 					</h1>
 					<hr className="my-2" />
-					<h1>
-						<b>{fill("ENDEREÇO DE ENTREGA", 50)}</b>
+					<h1 className="text-xs">
+						<b>(DAE) DOCUMENTO AUXILIAR DE ENTREGAS</b>
 					</h1>
 					<hr className="my-2" />
-					<p>
-						PARA JOAQUIM, R. AVENIDA BRASIL DOS ALFRENEIROS, N 512, EM FRENTE AO
-						JOANES DA CARNE, DO LADO DO POSTE BRANCO, CASA DO CHICO ALVES
-					</p>
+					<p>{msg}</p>
 					<hr className="my-2" />
-					<h1>
-						<b>{fill("PAGAMENTO", 50)}</b>
+					<h1 className="text-xs">
+						<b>(DAE) DOCUMENTO AUXILIAR DE ENTREGAS</b>
 					</h1>
 					<hr className="my-2" />
-					<p>
+					<p className="text-xs">
 						Agradecemos a preferência por nossa loja! Para reclamações entre em
 						contato conosco pelo nosso Whatsapp: (88) 9.9218-3444
 					</p>
@@ -98,7 +99,7 @@ function Teste() {
 	);
 }
 
-function fill(msg: string, targetLength: number = 256) {
+function _fill(msg: string, targetLength: number = 256) {
 	const a = targetLength - msg.length;
 	const padLeft = "-".repeat(a / 2 - 1);
 	const padRight = "-".repeat(a / 2 - 1);
