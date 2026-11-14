@@ -99,11 +99,11 @@ function Teste() {
 	);
 }
 
-function _fill(msg: string, targetLength: number = 256) {
+/* function _fill(msg: string, targetLength: number = 256) {
 	const a = targetLength - msg.length;
 	const padLeft = "-".repeat(a / 2 - 1);
 	const padRight = "-".repeat(a / 2 - 1);
 	return `${padLeft} ${msg} ${padRight}`;
-}
+} */
 
 export default App;
