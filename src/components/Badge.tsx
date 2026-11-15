@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { tw, variants, type vp } from "@/utility";
+import { tw, variants, type vp } from "@/lib/utility";
 
 const badgeStyle = variants({
 	base: "inline-flex items-center gap-1 rounded-full bg-black/10 px-2 py-1 text-xs font-bold text-black/80 border-[1.5px]",

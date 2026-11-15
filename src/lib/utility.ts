@@ -72,8 +72,6 @@ export function getNowDateOrderedDashedString() {
 		.join("-")}`;
 }
 
-export type SS<T> = React.Dispatch<React.SetStateAction<T>>;
-
 export function BRL(value: number): string {
 	return new Intl.NumberFormat("pt-BR", {
 		style: "currency",

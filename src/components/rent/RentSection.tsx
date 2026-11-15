@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDebounce, useValuesHistory } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
-import { BRL } from "@/utility";
+import { BRL } from "@/lib/utility";
 import { Input } from "../Common";
 import { Title } from "../StaticComponents";
 

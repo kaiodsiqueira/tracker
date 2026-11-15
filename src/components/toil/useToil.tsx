@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPersistentStorage, StrSign } from "@/utility";
+import { getPersistentStorage, StrSign } from "@/lib/utility";
 
 type ToilUserLog = {
 	sign: ReturnType<typeof StrSign>;

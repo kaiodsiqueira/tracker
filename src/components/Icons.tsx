@@ -1,4 +1,4 @@
-import { tw } from "@/utility";
+import { tw } from "@/lib/utility";
 
 type IconsProps = { className?: string };
 

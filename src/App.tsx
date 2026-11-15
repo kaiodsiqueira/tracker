@@ -2,40 +2,13 @@ import BackupSection from "./components/BackupSection";
 import CardSimulatorSection from "./components/card-simulator/Section";
 import PrintableAnnotationsSection from "./components/printable-annotations/Section";
 import RentSection from "./components/rent/RentSection";
-import { Title } from "./components/StaticComponents";
+import RemindersSection from "./components/section-reminders/Section";
 import ToilSection from "./components/toil/ToilSection";
-import {
-	CreateDeliveryReminderButton,
-	ListDeliveryReminders,
-	useReminders,
-} from "./Reminders";
-
-function ReminderSection() {
-	const { reminders, addReminder, removeReminder } = useReminders();
-
-	return (
-		<div className="p-4 bg-neutral-50 border border-black/20 shadow-lg rounded">
-			<div className="flex justify-between gap-2">
-				<div>
-					<Title>Lembrete de eventos</Title>
-					<p className="text-xs">
-						Gerencie lembretes para não esquecer de tarefas importantes mais
-						tarde.
-					</p>
-				</div>
-
-				<CreateDeliveryReminderButton onSave={addReminder} />
-			</div>
-
-			<ListDeliveryReminders reminders={reminders} onRemove={removeReminder} />
-		</div>
-	);
-}
 
 function App() {
 	return (
 		<main className="bg-neutral-100 flex flex-col gap-4 px-1 sm:px-10 py-5">
-			<ReminderSection />
+			<RemindersSection />
 			<RentSection />
 			<CardSimulatorSection />
 			<PrintableAnnotationsSection />

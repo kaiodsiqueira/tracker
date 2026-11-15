@@ -1,14 +1,23 @@
 import { Printer, ReceiptText } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import { displayPrettyDate } from "@/utility";
+import { createToken } from "@/lib/crypto";
+import { displayPrettyDate } from "@/lib/utility";
 import Button from "../Button";
 import { LogoSimple, Whatsapp } from "../Icons";
 import { Title } from "../StaticComponents";
 
+const PASSWORD = "test";
+
 export default function PrintableAnnotationsSection() {
 	const [msg, setMsg] = useState("");
+	const [signature, setSignature] = useState("");
+
 	const cupomRef = useRef(null);
+
+	useEffect(() => {
+		createToken(msg, PASSWORD).then(setSignature);
+	}, [msg]);
 
 	const imprimir = useReactToPrint({
 		contentRef: cupomRef,
@@ -44,10 +53,7 @@ export default function PrintableAnnotationsSection() {
 					<p className="p-2 font-semibold rounded-md w-full bg-black/5 border whitespace-pre-wrap">
 						{msg}
 					</p>
-					<hr className="my-2" />
-					<h1 className="bg-black w-full text-white text-xs">
-						<b>(DAE) NOTA AUXILIAR OFICIAL</b>
-					</h1>
+					<p className="text-[8px] font-medium wrap-anywhere">{signature}</p>
 					<hr className="my-2" />
 					<Footer />
 				</div>
@@ -61,6 +67,7 @@ export default function PrintableAnnotationsSection() {
 						className="border rounded-md w-full p-4"
 						onChange={(e) => setMsg(e.target.value)}
 					/>
+
 					<Button onClick={imprimir}>
 						<Printer /> Abrir menu de impressão
 					</Button>
@@ -84,9 +91,9 @@ function Header() {
 }
 function Footer() {
 	return (
-		<p className="flex border-t border-black pt-2 flex-col gap-2 items-center text-[10px]">
-			Agradecemos a preferência por nossa loja! Para reclamações entre em
-			contato conosco pelos nossos canais de comunicações abaixo:
+		<p className="flex border-t border-black pt-2 flex-col gap-2 items-center leading-tight text-[10px]">
+			Agradecemos a preferência por nossa loja! Para dúvidas ou reclamações
+			entre em contato conosco pelos nossos canais de comunicações abaixo:
 			<div className="flex gap-1 font-bold">
 				<Whatsapp className="w-3" /> (88) 9.9218-3444
 			</div>

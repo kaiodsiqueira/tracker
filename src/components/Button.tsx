@@ -1,5 +1,5 @@
 import type { VariantProps } from "tailwind-variants";
-import { tw, variants } from "../utility";
+import { tw, variants } from "../lib/utility";
 
 type ButtonProps = React.DetailedHTMLProps<
 	React.ButtonHTMLAttributes<HTMLButtonElement>,

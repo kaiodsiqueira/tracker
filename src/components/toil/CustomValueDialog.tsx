@@ -13,7 +13,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { MaskMinutes, UnmaskMinutes } from "@/lib/masks";
-import { minutesToDuration, type SS, tw, whichSign } from "@/utility";
+import { minutesToDuration, type SS, tw, whichSign } from "@/lib/utility";
 
 export const MONTHLY_WORKING_DAYS = 24; // Dias trabalhados por mês
 export const DAILY_WORKING_HOURS_IN_MINUTES = 520; // 8h 40m

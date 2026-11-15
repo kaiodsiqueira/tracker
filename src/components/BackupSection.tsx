@@ -4,7 +4,7 @@ import {
 	getNowDateOrderedDashedString,
 	getPersistentStorage,
 	setPersistentStorage,
-} from "../utility";
+} from "../lib/utility";
 import Button from "./Button";
 import { Input } from "./Common";
 

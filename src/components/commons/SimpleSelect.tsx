@@ -6,7 +6,7 @@ import {
 	ComboboxItem,
 	ComboboxList,
 } from "@/components/ui/combobox";
-import type { SS } from "@/utility";
+import type { SS } from "@/lib/utility";
 
 export default function SimpleSelect(props: {
 	value: string;

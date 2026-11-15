@@ -7,7 +7,7 @@ import {
 	Select as ShadSelect,
 } from "@/components/ui/select";
 
-import { tw } from "../utility";
+import { tw } from "../lib/utility";
 
 export function ColoredNumberAnwser(
 	props: PropsWithChildren & { question?: string; sign: number },

@@ -4,8 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { useDebounce, useValuesHistory } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
-import type { LiProps } from "@/types";
-import { BRL } from "@/utility";
+import type { LiProps } from "@/lib/types";
+import { BRL } from "@/lib/utility";
 import { Input } from "../Common";
 import SimpleSelect from "../commons/SimpleSelect";
 import { Title } from "../StaticComponents";

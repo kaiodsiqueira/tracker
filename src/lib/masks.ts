@@ -1,4 +1,4 @@
-import { BRL, MathSign } from "@/utility";
+import { BRL, MathSign } from "@/lib/utility";
 
 export const MaskBRL = (value: string | number): string => {
 	if (!value) return "R$ 0,00";

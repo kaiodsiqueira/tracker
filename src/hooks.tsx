@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getPersistentStorage, type SS, setPersistentStorage } from "./utility";
+import type { SS } from "./lib/types";
+import { getPersistentStorage, setPersistentStorage } from "./lib/utility";
 
 export function useDebounce(fn: any, delay = 400) {
 	const timerRef = useRef<number>(null);

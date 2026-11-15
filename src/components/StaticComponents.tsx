@@ -1,6 +1,6 @@
-import { CircleSlash } from "lucide-react";
+import { CircleSlash, MessageCircleWarning } from "lucide-react";
 import type { PropsWithChildren } from "react";
-import { tw } from "@/utility";
+import { tw } from "@/lib/utility";
 
 export function SimpleWarnMessage(
 	props: PropsWithChildren & { className?: string },
@@ -8,11 +8,11 @@ export function SimpleWarnMessage(
 	return (
 		<div
 			className={tw(
-				"text-xs leading-tight p-1 rounded border bg-yellow-50 border-yellow-200 text-yellow-800",
+				"flex gap-1 text-xs leading-tight p-1 rounded border bg-yellow-50 border-yellow-800 text-yellow-800",
 				props.className,
 			)}
 		>
-			{props.children}
+			<MessageCircleWarning className="w-8" /> {props.children}
 		</div>
 	);
 }

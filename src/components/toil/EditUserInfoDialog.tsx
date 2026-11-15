@@ -21,7 +21,7 @@ import {
 	SelectLabel,
 } from "@/components/ui/select";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
-import type { SS } from "@/utility";
+import type { SS } from "@/lib/utility";
 
 const AVAILABLE_AVATARS = [
 	{ label: "Iniciais", value: "initials" },
