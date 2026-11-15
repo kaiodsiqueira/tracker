@@ -4,24 +4,28 @@ import { useReactToPrint } from "react-to-print";
 import { createToken } from "@/lib/crypto";
 import { displayPrettyDate } from "@/lib/utility";
 import Button from "../Button";
+import { SimpleCheckbox } from "../Common";
 import { LogoSimple, Whatsapp } from "../Icons";
 import { Title } from "../StaticComponents";
 
 const PASSWORD = "test";
 
 export default function PrintableAnnotationsSection() {
-	const [msg, setMsg] = useState("");
-	const [signature, setSignature] = useState("");
+	const [message, setMessage] = useState("");
 
-	const cupomRef = useRef(null);
+	const [token, setToken] = useState("");
+	const [showToken, setShowToken] = useState(false);
+
+	const receiptRef = useRef(null);
 
 	useEffect(() => {
-		createToken(msg, PASSWORD).then(setSignature);
-	}, [msg]);
+		if (!showToken) return;
+		createToken(message, PASSWORD).then(setToken);
+	}, [message, showToken]);
 
-	const imprimir = useReactToPrint({
-		contentRef: cupomRef,
-		documentTitle: "Cupom",
+	const openBrowserPrintMenu = useReactToPrint({
+		contentRef: receiptRef,
+		documentTitle: "NOTA AUXILIAR OFICIAL",
 	});
 
 	return (
@@ -40,35 +44,53 @@ export default function PrintableAnnotationsSection() {
 
 			<div className="p-4 grid grid-cols-2">
 				<div
-					ref={cupomRef}
+					ref={receiptRef}
 					className="w-[302.36px] flex items-center flex-col gap-1 text-center border p-4"
 				>
 					<hr className="my-2 mt-8" />
 					<Header />
-					<hr className="my-2" />
-					<h1 className="bg-black w-full text-white text-xs">
-						<b>(DAE) NOTA AUXILIAR OFICIAL</b>
+					<hr className="my-1" />
+					<h1 className="bg-black py-1 w-full text-white text-xs">
+						<b>NOTA AUXILIAR OFICIAL</b>
 					</h1>
-					<hr className="my-2" />
-					<p className="p-2 font-semibold rounded-md w-full bg-black/5 border whitespace-pre-wrap">
-						{msg}
+					<hr className="my-1" />
+					<p className="mb-2 p-2 font-semibold rounded-md w-full bg-black/5 border whitespace-pre-wrap">
+						{message}
 					</p>
-					<p className="text-[8px] font-medium wrap-anywhere">{signature}</p>
-					<hr className="my-2" />
+					{showToken && (
+						<>
+							<span className="text-[8px] font-medium">
+								TOKEN DE AUTENTICIDADE:
+							</span>
+							<p className="text-[8px] p-2 rounded border bg-black/5 font-medium wrap-anywhere">
+								{token}
+							</p>
+						</>
+					)}
 					<Footer />
 				</div>
 
-				<div>
-					<span className="font-medium text-xs">Mensagem</span>
-					<textarea
-						placeholder="Digite aqui a mensagem que aparecerá escrita no meio da nota impressa!"
-						rows={10}
-						value={msg}
-						className="border rounded-md w-full p-4"
-						onChange={(e) => setMsg(e.target.value)}
-					/>
+				<div className="flex flex-col gap-4">
+					<div>
+						<span className="font-medium text-xs">Mensagem</span>
+						<textarea
+							placeholder="Digite aqui a mensagem que aparecerá escrita no meio da nota impressa!"
+							rows={10}
+							value={message}
+							className="border border-black/20 rounded-md w-full p-4"
+							onChange={(e) => setMessage(e.target.value)}
+						/>
+					</div>
 
-					<Button onClick={imprimir}>
+					<SimpleCheckbox
+						checked={showToken}
+						onCheckedChange={setShowToken}
+						description="Este token poderá ser usado futuramente para conferir se a mensagem emitida é realmente legítima e foi originada deste sistema."
+					>
+						Incluir token de autenticidade
+					</SimpleCheckbox>
+
+					<Button onClick={openBrowserPrintMenu}>
 						<Printer /> Abrir menu de impressão
 					</Button>
 				</div>
@@ -79,11 +101,10 @@ export default function PrintableAnnotationsSection() {
 
 function Header() {
 	return (
-		<div className="flex flex-col items-center border-b border-black pb-2 w-full">
+		<div className="flex flex-col items-center w-full">
 			<LogoSimple className="w-10" />
 			<p className="text-[10px] mt-2">
-				Sistemas Nildo Celulares, R. Primeiro de maio, N° 215
-				<br />
+				Sistemas Nildo Celulares, R. Primeiro de Maio, N° 215, Forquilha-CE:{" "}
 				{displayPrettyDate()}
 			</p>
 		</div>
@@ -91,7 +112,7 @@ function Header() {
 }
 function Footer() {
 	return (
-		<p className="flex border-t border-black pt-2 flex-col gap-2 items-center leading-tight text-[10px]">
+		<p className="mt-2 flex border-t border-black pt-2 flex-col gap-2 items-center leading-tight text-[10px]">
 			Agradecemos a preferência por nossa loja! Para dúvidas ou reclamações
 			entre em contato conosco pelos nossos canais de comunicações abaixo:
 			<div className="flex gap-1 font-bold">

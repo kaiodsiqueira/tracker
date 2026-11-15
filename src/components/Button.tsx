@@ -7,7 +7,7 @@ type ButtonProps = React.DetailedHTMLProps<
 >;
 
 const buttonStyles = variants({
-	base: "flex gap-2 items-center px-4 py-2 rounded shadow hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+	base: "w-fit flex gap-2 items-center px-4 py-2 rounded shadow hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
 	variants: {
 		theme: {
 			neutral:

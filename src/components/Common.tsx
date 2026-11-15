@@ -1,6 +1,13 @@
-import type { SelectRootProps } from "@base-ui/react";
-import type { PropsWithChildren } from "react";
-
+import type { CheckboxRootProps, SelectRootProps } from "@base-ui/react";
+import { type PropsWithChildren, useId } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Field,
+	FieldContent,
+	FieldDescription,
+	FieldLabel,
+	FieldTitle,
+} from "@/components/ui/field";
 import {
 	SelectTrigger,
 	SelectValue,
@@ -76,5 +83,25 @@ export function Select({
 				{children}
 			</ShadSelect>
 		</div>
+	);
+}
+
+export function SimpleCheckbox(
+	props: PropsWithChildren & CheckboxRootProps & { description?: string },
+) {
+	const id = useId();
+
+	return (
+		<FieldLabel>
+			<Field orientation="horizontal">
+				<Checkbox {...props} id={id} name={id} />
+				<FieldContent>
+					<FieldTitle>{props.children}</FieldTitle>
+					{props.description && (
+						<FieldDescription>{props.description}</FieldDescription>
+					)}
+				</FieldContent>
+			</Field>
+		</FieldLabel>
 	);
 }
