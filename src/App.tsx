@@ -1,10 +1,9 @@
-import { useRef, useState } from "react";
 import BackupSection from "./components/BackupSection";
 import CardSimulatorSection from "./components/card-simulator/Section";
+import PrintableAnnotationsSection from "./components/printable-annotations/Section";
 import RentSection from "./components/rent/RentSection";
 import { Title } from "./components/StaticComponents";
 import ToilSection from "./components/toil/ToilSection";
-
 import {
 	CreateDeliveryReminderButton,
 	ListDeliveryReminders,
@@ -39,6 +38,7 @@ function App() {
 			<ReminderSection />
 			<RentSection />
 			<CardSimulatorSection />
+			<PrintableAnnotationsSection />
 			<ToilSection />
 			<BackupSection />
 
@@ -47,63 +47,8 @@ function App() {
 					Sistema feito por <b>@kaiodsiqueira</b> para <b>@nildo_celular_</b>
 				</p>
 			</footer>
-
-			<Teste />
 		</main>
 	);
 }
-
-import { useReactToPrint } from "react-to-print";
-import { Input } from "./components/ui/input";
-
-function Teste() {
-	const [msg, setMsg] = useState("");
-	const cupomRef = useRef(null);
-
-	const imprimir = useReactToPrint({
-		contentRef: cupomRef,
-		documentTitle: "Cupom",
-	});
-
-	return (
-		<div>
-			<Input value={msg} onChange={(e) => setMsg(e.target.value)} />
-			<button type="button" onClick={imprimir}>
-				Imprimir cupom
-			</button>
-
-			<div ref={cupomRef} className="w-[302.36px] border p-4">
-				<center>
-					<hr className="my-2 mt-8" />
-					<h1 className="text-xs">
-						<b>SISTEMAS NILDO CELULARES</b>
-					</h1>
-					<hr className="my-2" />
-					<h1 className="text-xs">
-						<b>(DAE) DOCUMENTO AUXILIAR DE ENTREGAS</b>
-					</h1>
-					<hr className="my-2" />
-					<p>{msg}</p>
-					<hr className="my-2" />
-					<h1 className="text-xs">
-						<b>(DAE) DOCUMENTO AUXILIAR DE ENTREGAS</b>
-					</h1>
-					<hr className="my-2" />
-					<p className="text-xs">
-						Agradecemos a preferência por nossa loja! Para reclamações entre em
-						contato conosco pelo nosso Whatsapp: (88) 9.9218-3444
-					</p>
-				</center>
-			</div>
-		</div>
-	);
-}
-
-/* function _fill(msg: string, targetLength: number = 256) {
-	const a = targetLength - msg.length;
-	const padLeft = "-".repeat(a / 2 - 1);
-	const padRight = "-".repeat(a / 2 - 1);
-	return `${padLeft} ${msg} ${padRight}`;
-} */
 
 export default App;

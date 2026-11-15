@@ -84,3 +84,21 @@ export function BRL(value: number): string {
 export function clamp(value: number, min: number, max: number): number {
 	return Math.max(min, Math.min(max, value));
 }
+
+export function displayPrettyDate() {
+	const now = new Date();
+
+	const formattedDate = now.toLocaleDateString("pt-BR", {
+		day: "2-digit",
+		month: "long",
+		year: "numeric",
+	});
+
+	const formattedTime = now.toLocaleTimeString("pt-BR", {
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	});
+
+	return `${formattedDate} às ${formattedTime}`;
+}
