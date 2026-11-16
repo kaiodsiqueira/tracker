@@ -50,7 +50,7 @@ export default function PrintableAnnotationsSection() {
 					<hr className="my-2 mt-8" />
 					<Header />
 					<hr className="my-1" />
-					<h1 className="bg-black/15 w-full text-black text-xs">
+					<h1 className="text-xs border-b border-black w-full pb-2">
 						<b>NOTA AUXILIAR OFICIAL</b>
 					</h1>
 					<hr className="my-1" />
@@ -59,10 +59,10 @@ export default function PrintableAnnotationsSection() {
 					</p>
 					{showToken && (
 						<>
-							<span className="text-[8px] font-medium">
+							<span className="text-[10px] font-medium">
 								TOKEN DE AUTENTICIDADE:
 							</span>
-							<p className="text-[8px] p-2 rounded border bg-black/5 font-medium wrap-anywhere">
+							<p className="text-[10px] p-2 rounded border bg-black/5 font-medium wrap-anywhere">
 								{token}
 							</p>
 						</>
@@ -104,12 +104,13 @@ function Header() {
 		<div className="flex flex-col items-center w-full">
 			<LogoSimple className="w-10" />
 			<p className="text-[10px] mt-2">
-				Sistemas Nildo Celulares, R. Primeiro de Maio, N° 215, Forquilha-CE:{" "}
+				Sistemas Nildo Celulares, R. Primeiro de Maio, N° 215, Forquilha-CE,{" "}
 				{displayPrettyDate()}
 			</p>
 		</div>
 	);
 }
+
 function Footer() {
 	return (
 		<p className="mt-2 flex border-t border-black pt-2 flex-col gap-2 items-center leading-tight text-[10px]">
