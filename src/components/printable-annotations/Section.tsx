@@ -50,7 +50,7 @@ export default function PrintableAnnotationsSection() {
 					<hr className="my-2 mt-8" />
 					<Header />
 					<hr className="my-1" />
-					<h1 className="bg-black py-1 w-full text-white text-xs">
+					<h1 className="bg-black/15 w-full text-black text-xs">
 						<b>NOTA AUXILIAR OFICIAL</b>
 					</h1>
 					<hr className="my-1" />
