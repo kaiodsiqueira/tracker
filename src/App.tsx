@@ -1,4 +1,4 @@
-import BackupSection from "./components/BackupSection";
+import BackupSection from "./components/backup-and-settings/Section";
 import CardSimulatorSection from "./components/card-simulator/Section";
 import PrintableAnnotationsSection from "./components/printable-annotations/Section";
 import RentSection from "./components/rent/RentSection";

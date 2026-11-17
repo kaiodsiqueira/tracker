@@ -1,5 +1,5 @@
 import type { CheckboxRootProps, SelectRootProps } from "@base-ui/react";
-import { type PropsWithChildren, useId } from "react";
+import { type PropsWithChildren, useId, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Field,
@@ -8,6 +8,7 @@ import {
 	FieldLabel,
 	FieldTitle,
 } from "@/components/ui/field";
+import { Input as UIInput } from "@/components/ui/input";
 import {
 	SelectTrigger,
 	SelectValue,
@@ -103,5 +104,52 @@ export function SimpleCheckbox(
 				</FieldContent>
 			</Field>
 		</FieldLabel>
+	);
+}
+
+import { Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import type { SS } from "@/lib/types";
+
+export function PasswordInput(
+	props: PropsWithChildren & {
+		description?: string;
+		value: string;
+		setValue: SS<string>;
+	},
+) {
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [show, setShow] = useState(false);
+
+	return (
+		<Field>
+			<FieldLabel htmlFor="input-button-group">{props.children}</FieldLabel>
+			{props.description && (
+				<FieldDescription>{props.description}</FieldDescription>
+			)}
+
+			<ButtonGroup>
+				<UIInput
+					ref={inputRef}
+					value={props.value}
+					onChange={(e) => props.setValue(e.target.value)}
+					type={show ? "text" : "password"}
+					id="input-button-group"
+					placeholder="Senha"
+				/>
+				<Button
+					onClick={() => {
+						// Toggle state
+						setShow(!show);
+						// Focus back on input
+						inputRef.current?.focus();
+					}}
+					variant="outline"
+				>
+					<Eye />
+				</Button>
+			</ButtonGroup>
+		</Field>
 	);
 }

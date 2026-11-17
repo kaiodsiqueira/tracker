@@ -2,13 +2,11 @@ import { Printer, ReceiptText } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { createToken } from "@/lib/crypto";
-import { displayPrettyDate } from "@/lib/utility";
+import { displayPrettyDate, getPersistentStorage } from "@/lib/utility";
 import Button from "../Button";
 import { SimpleCheckbox } from "../Common";
 import { LogoSimple, Whatsapp } from "../Icons";
 import { Title } from "../StaticComponents";
-
-const PASSWORD = "test";
 
 export default function PrintableAnnotationsSection() {
 	const [message, setMessage] = useState("");
@@ -20,7 +18,9 @@ export default function PrintableAnnotationsSection() {
 
 	useEffect(() => {
 		if (!showToken) return;
-		createToken(message, PASSWORD).then(setToken);
+		createToken(message, getPersistentStorage("crypto-password")).then(
+			setToken,
+		);
 	}, [message, showToken]);
 
 	const openBrowserPrintMenu = useReactToPrint({
