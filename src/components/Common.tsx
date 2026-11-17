@@ -107,7 +107,7 @@ export function SimpleCheckbox(
 	);
 }
 
-import { Eye } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import type { SS } from "@/lib/types";
@@ -147,7 +147,7 @@ export function PasswordInput(
 					}}
 					variant="outline"
 				>
-					<Eye />
+					{show ? <EyeOff /> : <Eye />}
 				</Button>
 			</ButtonGroup>
 		</Field>
