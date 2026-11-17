@@ -56,7 +56,7 @@ async function createAndDownloadBackup() {
 	}
 }
 
-export default function BackupSection() {
+export default function SettingsSection() {
 	const [cryptoPassword, setCryptoPassword] = useState(
 		getPersistentStorage("crypto-password") || "admin",
 	);
@@ -71,7 +71,7 @@ export default function BackupSection() {
 				<div>
 					<Title>Configurações</Title>
 					<p className="text-xs">
-						Crie ou restaure um backup dos dados deste sistema.
+						Altere ajustes, crie ou restore um backup de segurança.
 					</p>
 				</div>
 			</div>
