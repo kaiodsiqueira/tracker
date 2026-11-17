@@ -42,7 +42,7 @@ export default function PrintableAnnotationsSection() {
 				</div>
 			</header>
 
-			<div className="p-4 grid grid-cols-2">
+			<div className="p-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<div
 					ref={receiptRef}
 					className="w-[302.36px] flex items-center flex-col gap-1 text-center border p-4"
