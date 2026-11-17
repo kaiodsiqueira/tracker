@@ -1,4 +1,4 @@
-import { DatabaseArrowDown } from "lucide-react";
+import { DatabaseArrowDown, FileWarning } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Title } from "@/components/StaticComponents";
 import {
@@ -15,6 +15,7 @@ const scopes = [
 	"toil-users",
 	"history-card-simulated-values",
 	"history-rent-simulated-values",
+	"crypto-password",
 ];
 
 function isDirPickSupported() {
@@ -110,6 +111,11 @@ export default function SettingsSection() {
 					<Button onClick={createAndDownloadBackup} theme="neutral">
 						<DatabaseArrowDown /> Criar backup
 					</Button>
+
+					<p className="mt-2 flex gap-2 items-center text-xs bg-yellow-50 px-4 py-1 text-yellow-900 border-yellow-900 border rounded">
+						<FileWarning size={25} /> Guarde o arquivo gerado com segurança pois
+						ele contém dados sensíveis como senhas.
+					</p>
 				</div>
 
 				<PasswordInput
