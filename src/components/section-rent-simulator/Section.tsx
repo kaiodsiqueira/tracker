@@ -1,5 +1,5 @@
 import { Calculator, Info } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDebounce, useValuesHistory } from "@/hooks";
 import { MaskBRL, UnmaskBRL } from "@/lib/masks";
@@ -23,20 +23,27 @@ const INSTALLMENTS = [
 export default function RentSection() {
 	const [showDetails, setShowDetails] = useState(false);
 
+	// Input states
 	const [price, setPrice] = useState(MaskBRL(235000));
+	const [customDownpay, setCustomDownpay] = useState(MaskBRL(0));
 	const [tradein, setTradein] = useState(MaskBRL(0));
 
+	// Input values parsing
 	const nPreco = UnmaskBRL(price);
+	const nEntradaEfetiva = UnmaskBRL(customDownpay);
 	const nCreditoDeTroca = UnmaskBRL(tradein);
 
-	const nEntradaPorcentagem = DOWN_PAYMENT_PERCENT / 100;
-	const nEntradaRelativa = nPreco * nEntradaPorcentagem;
+	const nRestante = nPreco - nEntradaEfetiva;
 
-	const nEntradaTotal = nEntradaRelativa + FIXED_DOWN_PAYMENT;
-	const nEntradaEfetiva =
-		nEntradaTotal - Math.min(nCreditoDeTroca, nEntradaTotal);
+	const nEntradaRelativa = nPreco * (DOWN_PAYMENT_PERCENT / 100);
+	const nEntradaMinimaTotal = nEntradaRelativa + FIXED_DOWN_PAYMENT;
 
-	const nRestante = nPreco - nEntradaTotal;
+	const nEntradaIlustrativa = nEntradaEfetiva - nCreditoDeTroca;
+
+	// Essentially: when the price changes, set the downpay input to the minimum accepted
+	useEffect(() => {
+		setCustomDownpay(MaskBRL(nEntradaMinimaTotal * 100));
+	}, [nEntradaMinimaTotal]);
 
 	// history section
 
@@ -80,7 +87,7 @@ export default function RentSection() {
 
 			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				{/* SIMULATION SECTION DIV */}
-				<div className="p-4 rounded border bg-neutral-100">
+				<div className="h-fit p-4 rounded border bg-neutral-100">
 					<h1 className="mb-4 px-2 py-1 text-sm font-medium w-fit rounded-md bg-slate-800 text-neutral-100 flex items-center gap-1">
 						<Info size={12} /> Simulação na modalidade de aluguel
 					</h1>
@@ -90,14 +97,13 @@ export default function RentSection() {
 						<br />
 						{showDetails ? (
 							<div>
-								Entrada: {DOWN_PAYMENT_PERCENT}% (<b>{BRL(nEntradaRelativa)}</b>
-								) + Fixo (<b>{BRL(FIXED_DOWN_PAYMENT)}</b>) - Troca (
+								Entrada: Efetiva (<b>{BRL(nEntradaEfetiva)}</b>) - Troca (
 								<b>{BRL(nCreditoDeTroca)}</b>) = Soma (
-								<b>{BRL(nEntradaEfetiva)}</b>)
+								<b>{BRL(nEntradaIlustrativa)}</b>)
 							</div>
 						) : (
 							<div>
-								Entrada: <b>{BRL(nEntradaEfetiva)}</b>
+								Entrada: <b>{BRL(nEntradaIlustrativa)}</b>
 							</div>
 						)}
 					</div>
@@ -109,7 +115,7 @@ export default function RentSection() {
 							const restanteComJuros = nRestante + juros;
 							const parcelas = restanteComJuros / options.installments;
 
-							const total = nEntradaTotal + restanteComJuros;
+							const total = nEntradaEfetiva + restanteComJuros;
 
 							return (
 								<li
@@ -125,7 +131,7 @@ export default function RentSection() {
 
 									{showDetails ? (
 										<div>
-											Entrada (<b>{BRL(nEntradaTotal)}</b>) + Restante (
+											Entrada (<b>{BRL(nEntradaEfetiva)}</b>) + Restante (
 											<b>{BRL(nRestante)}</b>) + Juros (<b>{BRL(juros)}</b>) =
 											Total (<b>{BRL(total)}</b>)
 										</div>
@@ -173,6 +179,17 @@ export default function RentSection() {
 
 					<Input
 						className="w-auto"
+						title={`Entrada customizada (em R$) (mínimo: ${BRL(nEntradaMinimaTotal)})`}
+						value={customDownpay}
+						onChange={(e) => setCustomDownpay(MaskBRL(e.target.value))}
+					/>
+					<p className="text-xs font-medium text-black/75">
+						Usado quando o cliente quer dar uma entrada diferente da mínima
+						exigida.
+					</p>
+
+					<Input
+						className="w-auto"
 						title="Crédito de troca (em R$)"
 						value={tradein}
 						onChange={(e) => setTradein(MaskBRL(e.target.value))}
@@ -184,9 +201,11 @@ export default function RentSection() {
 					</p>
 
 					<h1 className="mt-4 text-2xl font-bold">Sobre</h1>
-					<p>
+					<p className="text-xs">
 						¹ Pagamento quinzenal também disponível. ² A entrada também pode ser
-						parcelada no cartão de crédito.
+						parcelada no cartão de crédito. ³ É permitido usar uma entrada
+						customizada menor que a mínima exigida, mas verifique se pode ser
+						aplicado a esta venda!
 					</p>
 				</div>
 			</div>

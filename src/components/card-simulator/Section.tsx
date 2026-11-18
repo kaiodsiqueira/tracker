@@ -65,7 +65,7 @@ export default function CardSimulatorSection() {
 
 			<div className="mt-2 p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* SIMULATION SECTION DIV */}
-				<div className="col-span-2 p-4 rounded border bg-neutral-100">
+				<div className="h-fit col-span-2 p-4 rounded border bg-neutral-100">
 					<div className="flex flex-wrap gap-4 items-center">
 						<h1 className="px-2 py-1 text-sm font-medium w-fit rounded-md bg-emerald-900 text-neutral-100 flex items-center gap-1">
 							<Info size={12} /> Simulação no cartão

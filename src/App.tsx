@@ -1,8 +1,8 @@
 import SettingsSection from "./components/backup-and-settings/Section";
 import CardSimulatorSection from "./components/card-simulator/Section";
 import PrintableAnnotationsSection from "./components/printable-annotations/Section";
-import RentSection from "./components/rent/RentSection";
 import RemindersSection from "./components/section-reminders/Section";
+import RentSection from "./components/section-rent-simulator/Section";
 import ToilSection from "./components/toil/ToilSection";
 
 function App() {
